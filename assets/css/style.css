@@ -315,13 +315,13 @@ body.contrast-high .breadcrumb {
   margin-top: 1.5rem;
   margin-right: 0.8rem;
   border: none !important;
-  background: #00703c !important;
+  background: #005ea2 !important;
   color: white !important;
   box-shadow: 0 2px 0 #002d18;
   border-radius: 0;
   position: relative; }
   .btn-download:hover, .btn-download:active {
-    background: #005a30 !important; }
+    background: #162e51 !important; }
   .btn-download:visited {
     color: white !important; }
   .btn-download:active {
