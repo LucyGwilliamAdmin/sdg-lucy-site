@@ -81,8 +81,8 @@ frontpage_introduction_banner:
   description: frontpage.intro_body
 
 frontpage_goals_grid:
-  title: Test data for Sustainable Development Goal indicators
-  description: Click on each goal for Test Sustainable Development Goal global indicator data.
+  title: custom.my-goals-grid-title
+  description: custom.my-goals-grid-description
 
 frontpage_cards:
   - title: frontpage.download_all
