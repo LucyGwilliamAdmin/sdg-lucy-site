@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+        <script crossorigin="anonymous" src="https://polyfill.io/v3/polyfill.min.js?features=Promise%2CArray.prototype.forEach%2CString.prototype.includes%2CURLSearchParams%2CCustomEvent%2CArray.prototype.includes%2CArray.prototype.filter%2CArray.prototype.some%2CArray.prototype.find%2CObject.assign%2CArray.isArray%2CObject.values%2CArray.from%2CSet"></script>
+<script crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/javascript-canvas-to-blob/3.15.0/js/canvas-to-blob.min.js"></script>
+
+        <script>
+// This is where we initialise any global variables, namespaced in "opensdg".
+var opensdg = {
+
+  // A base URL for asynchronous calls to SDG data.
+  remoteDataBaseUrl: 'https://lucygwilliamadmin.github.io/sdg-lucy-data/ar',
+
+  chartConfigAlterations: [],
+  // A hook which can be used to modify the configuration for Chart.js.
+  chartConfigAlter: function(callback) {
+    this.chartConfigAlterations.push(callback);
+  },
+
+  // A hook which can be replaced to alter whether/how the values that are
+  // displayed on indicator tables/graphs get rounded.
+  dataRounding: function(value) {
+    // Alterations go here.
+    return value;
+  },
+
+  language: 'ar',
+};
+
+// For backwards compatibility, some of these might need to be global.
+// @TODO: Remove these eventually.
+var remoteDataBaseUrl = opensdg.remoteDataBaseUrl;
+
+</script>
+
+        <script>
+// JavaScript container for translation data.
+var translations = {
+  //Javascript version of the "t" filter from jekyll-open-sdg-plugins.
+  t: function(key) {
+
+    if (!key || typeof key !== 'string') {
+      return '';
+    }
+
+    // The majority of uses of this function are to translate disaggregation
+    // data. To spare data providers of needing to enter "data." in front of
+    // their disaggregation data, we specifically look for that here.
+    if (typeof this.data === 'object' && this.data !== null && this.data[key]) {
+      return this.data[key];
+    }
+
+    var originalKey = key;
+    var drilled = this;
+    var levelsDrilled = 0;
+    var levels = key.split('.');
+
+    for (var level in levels) {
+      // If we have drilled down to soon, abort.
+      if (typeof drilled !== 'object') {
+        break;
+      }
+
+      if (levels[level] in drilled) {
+        drilled = drilled[levels[level]];
+        levelsDrilled += 1;
+      }
+    }
+
+    // If we didn't drill the right number of levels, return the original string.
+    if (levels.length != levelsDrilled) {
+      return originalKey;
+    }
+
+    // Otherwise we must have drilled all the way.
+    return drilled;
+  },
+};
+</script>
+
+        <!-- Basic Page Needs
+        ================================================== -->
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"><!-- Mobile Specific Metas
+        ================================================== -->
+        <meta name="HandheldFriendly" content="True">
+        <meta name="MobileOptimized" content="320">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- Title and meta description
+        ================================================== -->
+
+        
+    <title>Indicators For The Sustainable Development Goals</title>
+
+
+
+        <meta name="description" content="">
+        <meta property="og:description" content="">
+        
+        <meta name="robots" content="noindex, nofollow">
+        
+        <link rel="canonical" href="/">
+
+        
+
+        <!--[if IE 9]>
+        <script src="/sdg-lucy-site/assets/js/lib/classList.js"></script>
+        <![endif]-->
+
+        <!-- Favicons ================================================== -->
+        <!-- 128x128 -->
+        <link rel="shortcut icon" type="image/ico" href="/sdg-lucy-site/assets/img/favicons/favicon.ico">
+        <link rel="icon" type="image/png" href="/sdg-lucy-site/assets/img/favicons/favicon.png"><!-- 192x192, as recommended for Android
+        http://updates.html5rocks.com/2014/11/Support-for-theme-color-in-Chrome-39-for-Android
+        -->
+
+        
+
+        
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" crossorigin="">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" crossorigin="">
+        <link rel="stylesheet" href="https://cdn.datatables.net/fixedcolumns/3.2.3/css/fixedColumns.dataTables.min.css" crossorigin="">
+        <link rel="stylesheet" href="/sdg-lucy-site/assets/css/style.css?v=20201130195908">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans|Roboto" rel="stylesheet" crossorigin="">
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css"
+          integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+          crossorigin=""/>
+        <link rel="stylesheet" href="https://cdn.rawgit.com/socib/Leaflet.TimeDimension/master/dist/leaflet.timedimension.control.min.css"  crossorigin=""/>
+        <link rel="stylesheet" href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css'  crossorigin=""/>
+        <link rel="stylesheet" href="https://bowercdn.net/c/leaflet.zoomhome-latest/dist/leaflet.zoomhome.css"  crossorigin=""/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-search@2.9.7/dist/leaflet-search.min.css" crossorigin=""><!-- ShareThis BEGIN --><!-- ShareThis END -->
+
+    </head>
+<body class="language-ar layout-search">
+<!-- <div class="container"> -->
+
+<script>translations['header'] = {"alpha":"ألفا","default_contrast":"النقيض الافتراضي","disable_high_contrast":"تعطيل التباين العالي","disclaimer":"هذا موقع تطوير. نرحب <a href=\"mailto:%email_address\"> بتعليقاتكم </a>","enable_high_contrast":"تمكين التباين العالي","high_contrast":"تباين عالي","skip_link":"انتقل الى المحتويات الرئيسية","tag_line":"17 اهداف لتحويل عالمنا"};</script>
+
+<a class="sr-only sr-only-focusable" id="skiplink" href="#main-content" tabindex="0">انتقل الى المحتويات الرئيسية</a>
+<div id="disclaimer">
+  <div class="container">
+  <div class="disclaimer-alert">
+    <strong class="phase-tag">ألفا</strong>
+    
+    هذا موقع تطوير. نرحب <a href="mailto:test@example.com"> بتعليقاتكم </a>
+  </div>
+</div>
+
+</div>
+
+<header role="banner">
+  <div class="container">
+
+    <div class="logo-and-mobile-widgets">
+      <a class="navbar-brand" href="/sdg-lucy-site/ar/" id="home">
+        <img src="/sdg-lucy-site/assets/img/SDG_logo.png" alt="اهداف التنمية المستدامة - 17 اهداف لتحويل عالمنا" />
+      </a>
+
+      <div class="mobile-widgets">
+        <ul id='accessibility-nav' class='contrast-switcher'></ul><div class="language-toggle-mobile">
+          <div class="language-toggle-container">
+  
+  <div class="btn-group language-toggle-dropdown ">
+    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <span class="language-globe-in-dropdown"><i class="fa fa-globe language-toggle-globe-dropdown"></i></span><span class="language-name">العربية</span>
+      <span class="language-abbreviation">ar</span><i class="language-toggle-caret fa fa-chevron-down"></i></button>
+    <ul class="dropdown-menu"><li>
+            <a href="/sdg-lucy-site/search/">
+              English
+            </a>
+          </li><li>
+            <a href="/sdg-lucy-site/es/search/">
+              Español
+            </a>
+          </li></ul>
+  </div>
+</div>
+
+        </div></div>
+    </div>
+
+    <nav class="navbar navbar-default" id="main-nav">
+
+      <ul class="top-level">
+        <li id="menuToggle"
+            aria-label=""
+            aria-haspopup="true">
+          <button data-target="menu-mobile" aria-expanded="false">قائمة</button>
+          <ul class="nav navbar-nav menu-target contrast-switcher" id="menu-mobile"><li class="nav-link ">
+    <a href="/sdg-lucy-site/ar/goals">اهداف</a>
+    </li><li class="nav-link ">
+    <a href="/sdg-lucy-site/ar/reporting-status">حالة التقارير</a>
+    </li><li class="nav-link ">
+    <a href="/sdg-lucy-site/ar/about">عن</a>
+    </li><li class="nav-link ">
+    <a href="/sdg-lucy-site/ar/guidance">توجيه</a>
+    </li><li class="nav-link ">
+    <a href="/sdg-lucy-site/ar/faq">أسئلة شائعة</a>
+    </li><li class="nav-link ">
+    <a href="/sdg-lucy-site/ar/news"></a>
+    </li><li class="language-toggle-menu-header">
+    
+
+
+
+
+
+  <div class="language-toggle-container">
+  
+  <div class="btn-group language-toggle-dropdown ">
+    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <span class="language-globe-in-dropdown"><i class="fa fa-globe language-toggle-globe-dropdown"></i></span><span class="language-name">العربية</span>
+      <span class="language-abbreviation">ar</span><i class="language-toggle-caret fa fa-chevron-down"></i></button>
+    <ul class="dropdown-menu"><li>
+            <a href="/sdg-lucy-site/search/">
+              English
+            </a>
+          </li><li>
+            <a href="/sdg-lucy-site/es/search/">
+              Español
+            </a>
+          </li></ul>
+  </div>
+</div>
+
+
+
+</li></ul>
+
+        </li>
+        <li id="searchToggle"
+            aria-label=""
+            aria-haspopup="true">
+          <button data-target="search-mobile" aria-expanded="false">بحث</button>
+          <div id="search-mobile" class="menu-target">
+  <form action="/sdg-lucy-site/ar/search">
+    <input type="text" name="q" id="indicator_search-mobile" title="بحث" />
+    <label class="sr-only" for="indicator_search-mobile">بحث</label>
+    <button aria-label="بحث" id="search-mobile-btn" type="submit"><i class="fa fa-search" aria-hidden="false"></i></button>
+  </form>
+</div>
+
+        </li>
+      </ul>
+
+      <div id="search" class="menu-target">
+  <form action="/sdg-lucy-site/ar/search">
+    <input type="text" name="q" id="indicator_search" title="بحث" />
+    <label class="sr-only" for="indicator_search">بحث</label>
+    <button aria-label="بحث" id="search-btn" type="submit"><i class="fa fa-search" aria-hidden="false"></i></button>
+  </form>
+</div>
+
+
+      <ul class="nav navbar-nav menu-target contrast-switcher" id="menu"><li class="nav-link ">
+    <a href="/sdg-lucy-site/ar/goals">اهداف</a>
+    </li><li class="nav-link ">
+    <a href="/sdg-lucy-site/ar/reporting-status">حالة التقارير</a>
+    </li><li class="nav-link ">
+    <a href="/sdg-lucy-site/ar/about">عن</a>
+    </li><li class="nav-link ">
+    <a href="/sdg-lucy-site/ar/guidance">توجيه</a>
+    </li><li class="nav-link ">
+    <a href="/sdg-lucy-site/ar/faq">أسئلة شائعة</a>
+    </li><li class="nav-link ">
+    <a href="/sdg-lucy-site/ar/news"></a>
+    </li><li class="language-toggle-menu-header">
+    
+
+
+
+
+
+  <div class="language-toggle-container">
+  
+  <div class="btn-group language-toggle-dropdown ">
+    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <span class="language-globe-in-dropdown"><i class="fa fa-globe language-toggle-globe-dropdown"></i></span><span class="language-name">العربية</span>
+      <span class="language-abbreviation">ar</span><i class="language-toggle-caret fa fa-chevron-down"></i></button>
+    <ul class="dropdown-menu"><li>
+            <a href="/sdg-lucy-site/search/">
+              English
+            </a>
+          </li><li>
+            <a href="/sdg-lucy-site/es/search/">
+              Español
+            </a>
+          </li></ul>
+  </div>
+</div>
+
+
+
+</li></ul>
+
+
+    </nav>
+  </div>
+
+</header>
+<div id="top" tabindex=-1></div>
+
+
+<script type="text/template" class="results-template">
+  <% if(resultsCount) { %>
+    <p><%= resultsCount %> results found</p>
+    <% _.each(searchResults, function(result){ %>
+      <div class="row search-result">
+        <div class="col col-xs-12">
+          <a href="<%= result.url %>">
+            <h3 class="title"><%= result.title %></h3>
+          </a>
+          <div class="url"><%= result.type %> &raquo; <%= result.url %></div>
+          <div class="content"><%= result.content %></div>
+        </div>
+      </div>
+    <% }); %>
+
+  <% } else { %>
+    <p>
+      لا يوجد نتائج
+      <% if(didYouMean) { %>
+      - هل تعني:
+        <% _.each(didYouMean, function(searchTerm){ %>
+        <a href="/sdg-lucy-site/ar/search?q=<%= searchTerm %>"><%= searchTerm %></a>
+        <% }); %>
+      <% } %>
+    </p>
+  <% } %>
+</script>
+<script>
+opensdg.searchItems = {"/sdg-lucy-site/ar/ar/test-post-1/":{"type":"general.posts","url":"/sdg-lucy-site/ar/ar/test-post-1/","title":"Test Post 1","content":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec viverra erat facilisis massa blandit, ac faucibus risus ornare. Integer convallis eu lectus et vestibulum. Quisque aliquet ante vitae consectetur tincidunt. Pellentesque ligula orci, hendrerit vel laoreet in, lacinia et justo. Proin scelerisque feugiat vestibulum. Morbi enim tortor, dignissim ac augue in, hendrerit placerat leo. Quisque turpis sapien, vestibulum at nisi nec, luctus cursus metus. Quisque imperdiet sapien eget sollicitudin maximus. Vestibulum scelerisque arcu nec leo egestas euismod. Mauris varius eget lectus nec tempor. Sed accumsan aliquam sagittis. Nunc porta ante tellus.\n\nInteger a semper turpis, non scelerisque enim. Nullam turpis neque, tempus nec arcu nec, porttitor interdum metus. Ut semper viverra aliquet. Maecenas ante purus, euismod vel pellentesque quis, euismod rhoncus est. Donec tempus auctor quam, non volutpat erat convallis accumsan. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Curabitur varius ante ante, at suscipit est cursus quis. Vestibulum finibus et velit aliquet posuere. Aliquam ornare augue vel nibh fermentum, vel porttitor nisi molestie. Fusce eu euismod leo. Integer lobortis sollicitudin dolor vitae condimentum. Nulla rutrum est quis diam placerat efficitur. Phasellus finibus, nisi sed facilisis volutpat, velit lorem lacinia turpis, eu gravida ipsum dui at lorem.\n\nIn tincidunt orci et sodales commodo. Proin ornare tristique ex. Proin euismod vitae ligula id porttitor. Aliquam iaculis diam non magna condimentum, ut porta orci faucibus. Ut vitae ante tristique, porttitor risus vel, luctus nisi. Maecenas pharetra ultrices laoreet. Vivamus ac ultricies ligula. Nulla ut iaculis libero, a accumsan eros. Sed facilisis est magna, eu convallis sem eleifend et. Duis quis mattis orci. Proin tristique, turpis consequat interdum gravida, risus ligula laoreet turpis, ut porttitor dui urna quis turpis. In pharetra tristique odio, in aliquet leo consectetur ut. Curabitur bibendum velit a malesuada venenatis. Aliquam lacus risus, suscipit feugiat orci sit amet, tempor consequat velit.\n\nIn quis sapien nec massa ornare cursus ac tempus magna. Curabitur ut tortor tincidunt ligula molestie efficitur. Proin condimentum leo a nulla consequat, vel maximus risus ultrices. Suspendisse ullamcorper euismod nibh sed porttitor. Pellentesque ante nulla, tempus sed ultricies blandit, sodales sed ante. Vestibulum finibus mauris et erat malesuada, placerat tristique elit sodales. Integer dapibus tempus sem elementum porttitor. Sed mauris erat, posuere eu urna quis, bibendum pharetra lectus. Fusce eleifend, leo eget sollicitudin volutpat, turpis augue blandit enim, ac ultrices neque neque in massa. Suspendisse pretium quam quis tellus sollicitudin euismod. Aenean ut augue nisi. Vivamus faucibus congue lacus ut volutpat. Curabitur nunc nisl, molestie et faucibus sed, imperdiet eget neque. Aliquam tempor nulla velit, vitae tincidunt enim mattis in. Cras at mi scelerisque, feugiat ipsum accumsan, sodales nibh.\n","id":""},"/sdg-lucy-site/ar/ar/about/":{"type":"صفحات الانترنت","url":"/sdg-lucy-site/ar/ar/about/","title":"About","content":"Translation needed.\n","id":""},"/sdg-lucy-site/ar/ar/categories/":{"type":"صفحات الانترنت","url":"/sdg-lucy-site/ar/ar/categories/","title":"Categories","content":"Translation needed.\n","id":""},"/sdg-lucy-site/ar/ar/contact/":{"type":"صفحات الانترنت","url":"/sdg-lucy-site/ar/ar/contact/","title":"Contact","content":"Translation needed.\n","id":""},"/sdg-lucy-site/ar/ar/about/cookies-and-privacy/":{"type":"صفحات الانترنت","url":"/sdg-lucy-site/ar/ar/about/cookies-and-privacy/","title":"Cookies and privacy","content":"Translation needed.\n","id":""},"/sdg-lucy-site/ar/ar/faq/":{"type":"صفحات الانترنت","url":"/sdg-lucy-site/ar/ar/faq/","title":"Frequently Asked Questions (FAQ)","content":"Translation needed.\n","id":""},"/sdg-lucy-site/ar/ar/guidance/":{"type":"صفحات الانترنت","url":"/sdg-lucy-site/ar/ar/guidance/","title":"Guidance","content":"Translation needed.\n","id":""},"/sdg-lucy-site/ar/ar/news/":{"type":"صفحات الانترنت","url":"/sdg-lucy-site/ar/ar/news/","title":"News & Events","content":"Translation needed.\n","id":""},"/sdg-lucy-site/ar/ar/":{"type":"صفحات الانترنت","url":"/sdg-lucy-site/ar/ar/","title":null,"content":"\n","id":""},"/sdg-lucy-site/ar/ar/goals/":{"type":"صفحات الانترنت","url":"/sdg-lucy-site/ar/ar/goals/","title":null,"content":"\n","id":""},"/sdg-lucy-site/ar/ar/reporting-status/":{"type":"صفحات الانترنت","url":"/sdg-lucy-site/ar/ar/reporting-status/","title":null,"content":"\n","id":""},"/sdg-lucy-site/ar/ar/indicators.json":{"type":"صفحات الانترنت","url":"/sdg-lucy-site/ar/ar/indicators.json","title":null,"content":"\n","id":""},"/sdg-lucy-site/ar/ar/search/":{"type":"صفحات الانترنت","url":"/sdg-lucy-site/ar/ar/search/","title":null,"content":"\n","id":""},"/sdg-lucy-site/ar/8-10-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/8-10-2","title":"نسـبة البالغين ( 15 سـنة فأكثر) الذين لهم حساب مصـرفي أو حسـاب في مؤسـسة مالية أخرى أو لدى مقدم خدمات مالية متنقلة","content":"\n","id":"8.10.2"},"/sdg-lucy-site/ar/1-1-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/1-1-1","title":"نسبة السكان الذين يعيشون دون خط الفقر الدولي، بحسب الجنس، والعمر، والوضع الوظيفي، والموقع الجغرافي (حضري/ريفي)","content":"\n","id":"1.1.1"},"/sdg-lucy-site/ar/8-1-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/8-1-1","title":"معدل النمو السـنوي للناتج المحلي الإجمالي الحقيقي للفرد الواحد","content":"\n","id":"8.1.1"},"/sdg-lucy-site/ar/1-a-3":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/1-a-3","title":"المجموع الإجمالي للمنح والتدفقات الوافدة التي لا تستتبع اقتراض ديون، والتي تخصص مباشرة لبرامج الحد من الفقر محسوبا كنسبة من الناتج المحلي الإجمال","content":"\n","id":"1.a.3"},"/sdg-lucy-site/ar/10-b-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/10-b-1","title":"مجموع تدفقات الموارد المخصصة للتنمية، بحسب البلدان المستفيدة والبلدان المانحة وأنواع التدفقات (على سبيل المثال المساعدة الإنمائية الرسمية، والاستثمار الأجنبي المباشر، والتدفقات الأخرى)","content":"\n","id":"10.b.1"},"/sdg-lucy-site/ar/11-3-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/11-3-1","title":"نسبة معدل استهلاك الأراضي إلى معدل النمو السكان","content":"\n","id":"11.3.1"},"/sdg-lucy-site/ar/16-3-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/16-3-1","title":"نسبة ضحايا العنف خلال الاثني عشر شهرا السـابقة ألذين أبلغوا عما تعرضوا له من إيذاء إلى السلطات المختصة أو غيرها من آليات تسوية النزاعات المعترف بها رسميا","content":"\n","id":"16.3.1"},"/sdg-lucy-site/ar/3-5-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/3-5-1","title":"نطاق تغطية التـدخلات العلاجية (الخدمات الدوائية والنفسانية وخدمات إعـادة التأهيـل والرعاية اللاحقـة) لمعالجة الاضطرابات الناشئة عن تعاطي المواد المخدرة","content":"\n","id":"3.5.1"},"/sdg-lucy-site/ar/12-2-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/12-2-1","title":"الأثر المادي، ونصيب الفرد من الأثر المادي، ونصيب الناتج المحلي الإجمالي من الأثر المادي","content":"\n","id":"12.2.1"},"/sdg-lucy-site/ar/8-8-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/8-8-1","title":"التواتر في معدلات إصابات العمل المميتة وغير المميتة، بحسب نوع جنس المهاجرين ووضعهم","content":"\n","id":"8.8.1"},"/sdg-lucy-site/ar/10-3-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/10-3-1","title":"نسبة السكان الذين أبلغوا عن تعرضهم شخصيا لممارسات تمييزية أو تحرش خلال الاثني عشر شهرا السابقة لأسباب يحظر القانون الدولي لحقوق الإنسان التمييز على أساسها","content":"\n","id":"10.3.1"},"/sdg-lucy-site/ar/16-8-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/16-8-1","title":"نسبة عضوية البلدان النامية في المنظمات الدولية وحقوقها في التصويت في تلك المنظمات","content":"\n","id":"16.8.1"},"/sdg-lucy-site/ar/13-1-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/13-1-1","title":"عدد الأشخاص المتوفين والمفقودين ومن تضرروا مباشرة بسبب الكوارث من بين كل 100,000 شخص","content":"\n","id":"13.1.1"},"/sdg-lucy-site/ar/13-1-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/13-1-2","title":"عدد البلدان التي تعتمد وتنفذ استراتيجيات وطنية للحد من مخاطر الكوارث تمشيا مع إطار سنداي للحد من مخاطر الكوارث للفترة 2015-2030","content":"\n","id":"13.1.2"},"/sdg-lucy-site/ar/12-1-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/12-1-1","title":"عدد البلدان التي لديها خطط عمل وطنية للاستهلاك والإنتاج المستدامين أو التي أدجت تلك الخطط في سياساتها الوطنية باعتبارها أولوية أو غاية","content":"\n","id":"12.1.1"},"/sdg-lucy-site/ar/15-b-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/15-b-1","title":"المساعدة الإنمائية الرسمية والنفقات العامة الوجهة لحفظ التنوع البيولوجي والنظم الإيكولوجية واستخدامها استخداماً مستداماً","content":"\n","id":"15.b.1"},"/sdg-lucy-site/ar/17-15-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/17-15-1","title":" مدى استخدام أطر النتائج وأدوات التخطيط المملوكة للبلدان من جانب مقدمي التعاون الإنمائي","content":"\n","id":"17.15.1"},"/sdg-lucy-site/ar/1-5-3":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/1-5-3","title":"عدد البلدان التي تعتمد وتنفذ استراتيجيات وطنية للحد من مخاطر الكوارث تمشيا مع إطار سنداي للحد من مخاطر الكوارث للفترة 2015-2030","content":"\n","id":"1.5.3"},"/sdg-lucy-site/ar/3-a-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/3-a-1","title":"معدل الانتشار الموحد السن لاستعمال التبغ حالياً لدى الأشخاص الذين تبلغ أعمارهم 15 سنة فأكثر","content":"\n","id":"3.a.1"},"/sdg-lucy-site/ar/9-3-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/9-3-2","title":"نسـبة الصـناعات الصغيرة الحجم التي لها قرض أو خط ائتمان","content":"\n","id":"9.3.2"},"/sdg-lucy-site/ar/9-c-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/9-c-1","title":"نسبة السكان المشمولين بشبكة الهاتف المحمول، بحسب التكنولوجيا","content":"\n","id":"9.c.1"},"/sdg-lucy-site/ar/5-a-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/5-a-1","title":"(أ) نســبة مجموع المزارعين الذين يمتلكون أراض زراعية أو لديهم حقوق مضمونة في الأراضي الزراعية، بحسـب الجنس؛ و (ب) حصة المرأة بين الملاّك أو أصحاب الحقوق في الأراضي الزراعية، بحسب نوع الحيازة","content":"\n","id":"5.a.1"},"/sdg-lucy-site/ar/2-2-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/2-2-1","title":"معدل انتشار توقّف النمو (الطول بالنسبة للعمر <-2 نقطة من الانحراف المعياري عن متوسط معايير نمو الطفل لمنظمة الصحة العالمية) بين الأطفال دون سن الخامسة","content":"\n","id":"2.2.1"},"/sdg-lucy-site/ar/11-5-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/11-5-2","title":"الخسائر الاقتصادية المباشرة المتصلة بالناتج المحلي الإجمالي العالمي والأضرار التي لحقت بالهياكل الأساسية الحيوية وعدد الأعطال التي لحقت بالخدمات الأساسية بسبب الكوارث","content":"\n","id":"11.5.2"},"/sdg-lucy-site/ar/10-1-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/10-1-1","title":"معدلات نمو نصيب الفرد من إنفاق الأسر المعيشية أو إيراداتها ضمن أدنى 40 في المائة من السكان ومجموع السكان","content":"\n","id":"10.1.1"},"/sdg-lucy-site/ar/3-1-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/3-1-1","title":"نسبة الوفيات النفاسية ","content":"\n","id":"3.1.1"},"/sdg-lucy-site/ar/1-4-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/1-4-1","title":"ةنسبة السكان الذين يعيشون في أسر معيشية يمكنها الحصول على الخدمات الأساسية ","content":"\n","id":"1.4.1"},"/sdg-lucy-site/ar/2-4-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/2-4-1","title":"نسبة المساحة الزراعية المخصصة للزراعة المنتجة والمستدامة","content":"\n","id":"2.4.1"},"/sdg-lucy-site/ar/16-3-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/16-3-2","title":"المحتجزون غير المحكوم عليهم كنسبة من مجموع السجناء","content":"\n","id":"16.3.2"},"/sdg-lucy-site/ar/5-2-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/5-2-1","title":"نسبة النساء المعاشـرات والفتيات في الخامسة عشــرة وما فوق، اللاتي تعرضن لعنف بدني أو جنسي أو نفسي من عشير حالي أو سـابق، خلال الاثني عشـر شـهراً السـابقة، مصـنفة بحسـب شكل العنف والعمر ","content":"\n","id":"5.2.1"},"/sdg-lucy-site/ar/15-4-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/15-4-1","title":"التغطية محسوبة بالمناطق المحمية من المواقع المهمة للتنوع البيولوجي الجبلي","content":"\n","id":"15.4.1"},"/sdg-lucy-site/ar/11-b-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/11-b-1","title":"عدد البلدان التي تعتمد وتنفذ استراتيجيات وطنية للحد من مخاطرالكوارث تمشيا مع إطار سنداي للحد من مخاطر الكوارث للفترة 2015-2030","content":"\n","id":"11.b.1"},"/sdg-lucy-site/ar/17-19-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/17-19-1","title":"القيمة الدولارية لجميع الموارد المتاحة لتعزيز القدرات الإحصائية في البلدان النامية","content":"\n","id":"17.19.1"},"/sdg-lucy-site/ar/6-6-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/6-6-1","title":"نسبة التغير في نطاق النظم الإيكولوجية المتصلة بالمياه خلال فترة من الزمن","content":"\n","id":"6.6.1"},"/sdg-lucy-site/ar/1-3-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/1-3-1","title":"نسبة السكان الذين تشملهم حدود دنيا/نظم للحماية الاجتماعية، بحسب الجنس، وبحسب الفئات السكانية، كالأطفال، والعاطلين عن العمل، والمسنين، والأشخاص ذوي الإعاقة، والحوامل، والأطفال حديثي الولادة، وضحايا إصابات العمل، والفقراء، والضعفاء","content":"\n","id":"1.3.1"},"/sdg-lucy-site/ar/3-3-4":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/3-3-4","title":"عدد الإصـابات بأمراض التهاب الكبد الوبائي باء لكل 100,000 من السكان","content":"\n","id":"3.3.4"},"/sdg-lucy-site/ar/11-6-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/11-6-1","title":"نسبة النفايات الصلبة للمدن، التي ُتجمع بانتظام ويجري تفريغها نهائياً على نحو كاف، من مجموع النفايات الصلبة للمدن، بحسب المدينة","content":"\n","id":"11.6.1"},"/sdg-lucy-site/ar/8-9-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/8-9-2","title":"نسبة الوظائف في قطاعات السياحة المستدامة من مجموع الوظائف في قطاع السياحة","content":"\n","id":"8.9.2"},"/sdg-lucy-site/ar/16-6-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/16-6-2","title":"نسبة السكان الراضين عن تجربتهم الأخيرة في الاستفادة من الخدمات العامة","content":"\n","id":"16.6.2"},"/sdg-lucy-site/ar/16-10-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/16-10-1","title":"نســـبة الأطفال الذين تتراوح أعمارهم بين سنة واحدة  و17 ســنة والذين تعرضوا لأي عقاب بدني و/أو اعتداء نفسي من جانب مقدمي الرعاية في الشهر السابق","content":"\n","id":"16.10.1"},"/sdg-lucy-site/ar/11-3-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/11-3-2","title":"نسبة المدن التي لديها هيكل يتيح مشاركة المجتمع المدني على نحو مباشر في تخطيط المناطق الحضرية، ويعمل بانتظام ويُدار بطريقة ديمقراطية","content":"\n","id":"11.3.2"},"/sdg-lucy-site/ar/3-b-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/3-b-1","title":"نسـبة السـكان المسـتهدفين المســتفيدين من جميع اللقاحات المشمولة بالبرنامج الوطني لبلدهم ","content":"\n","id":"3.b.1"},"/sdg-lucy-site/ar/14-7-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/14-7-1","title":"مصائد الأسماك المستدامة كنسبة من الناتج المحلي الإجمالي في الدول الجزرية الصغيرة النامية، وأقل البلدان نمواً، وجميع البلدان","content":"\n","id":"14.7.1"},"/sdg-lucy-site/ar/3-c-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/3-c-1","title":"معدل كثافة الأخصائيين الصحيين وتوزيعهم","content":"\n","id":"3.c.1"},"/sdg-lucy-site/ar/5-5-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/5-5-2","title":"نسبة النساء في المناصب الإدارية","content":"\n","id":"5.5.2"},"/sdg-lucy-site/ar/14-3-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/14-3-1","title":"قياس متوسط الحموضة البحرية في مجموعة متفق عليها من محطات تمثيلية لأخذ العينات","content":"\n","id":"14.3.1"},"/sdg-lucy-site/ar/2-3-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/2-3-1","title":"حجم الإنتاج لكل وحـدة عمـل حسـب فئـات حجم المؤسسة الزراعية/الرعوية/الحرجية","content":"\n","id":"2.3.1"},"/sdg-lucy-site/ar/13-3-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/13-3-1","title":"عدد البلدان التي أدمجت التخفيف من تغير المناخ، والتكيف معه، والحد من أثره والإنذار المبكر في مناهج التعليم الابتدائي والثانوي والعال","content":"\n","id":"13.3.1"},"/sdg-lucy-site/ar/17-2-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/17-2-1","title":"صافي المسـاعدة الإنمائية الرسمية، ومجموعها، والمسـاعدةً، الإنمائية الرسمية المقدمة إلى أقل البلدان نمواً، كنسبة من الدخل القومي الإجمالي للجهات المانحة في لجنة المساعدة الإنمائية التابعة لمنظمة التعاون والتنمية في الميدان الاقتصادي","content":"\n","id":"17.2.1"},"/sdg-lucy-site/ar/10-2-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/10-2-1","title":"نسبة السكان الذين يعيشون دون 50 في المائة من متوسط الدخل، بحسب الجنس والعمر والأشخاص ذوي الإعاقة","content":"\n","id":"10.2.1"},"/sdg-lucy-site/ar/6-3-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/6-3-2","title":"نسبة الكتل المائية الآتية من مياه محيطة ذات نوعية جيدة","content":"\n","id":"6.3.2"},"/sdg-lucy-site/ar/11-c-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/11-c-1","title":"نسبة الدعم المالي المخصص المقدم إلى أقل البلدان نموا لتشييد وتجديد المباني المستدامة والقادرة على الصمود والمتسمة بالكفاءة في استخدام الموارد باستخدام مواد محلية","content":"\n","id":"11.c.1"},"/sdg-lucy-site/ar/14-1-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/14-1-1","title":"مؤشر فرط المغذيات في المناطق الساحلية وكثافة المخلفات البلاستيكية الطافية","content":"\n","id":"14.1.1"},"/sdg-lucy-site/ar/14-2-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/14-2-1","title":"نسبة المناطق الاقتصادية الحصرية الوطنية التي تُدار باستخدام نُهج قائمة على النظم الإيكولوجية","content":"\n","id":"14.2.1"},"/sdg-lucy-site/ar/3-2-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/3-2-1","title":"معدل وفيات الأطفال دون سن الخامسة","content":"\n","id":"3.2.1"},"/sdg-lucy-site/ar/12-6-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/12-6-1","title":" عدد الشركات التي تنشر تقارير تتعلق بالاستدامة","content":"\n","id":"12.6.1"},"/sdg-lucy-site/ar/1-5-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/1-5-1","title":"عدد الأشخاص المتوفين والمفقودين ومن تضرروا مباشرة بسبب الكوارث من بين كل 100,000 شخص","content":"\n","id":"1.5.1"},"/sdg-lucy-site/ar/17-19-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/17-19-2","title":"نسبة البلدان التي (أ) أجرت عداداً واحداً على الأقل للسكان المساكن في السنوات العشر الماضية؛ و(ب) حققت نسبة 100 في المائة في تسجيل المواليد ونسبة 80 في المائة في تسجيل الوفيات","content":"\n","id":"17.19.2"},"/sdg-lucy-site/ar/2-c-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/2-c-1","title":"مؤشر مفارقات أسعار الأغذية","content":"\n","id":"2.c.1"},"/sdg-lucy-site/ar/3-4-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/3-4-2","title":" معدل وفيات الانتحار","content":"\n","id":"3.4.2"},"/sdg-lucy-site/ar/16-5-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/16-5-1","title":"نسبة الأشخاص الذين اتصلوا مرة واحدة على الأقل بمسؤول حكومي ودفعوا رشوة لمسؤول حكومي، أو طلب منهم أولئك المسؤولون الحكوميون دفع رشوة، خلال الاثني عشر شهرا السابقة","content":"\n","id":"16.5.1"},"/sdg-lucy-site/ar/3-4-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/3-4-1","title":"معدل الوفيات الناجمة عن أمراض القلب والأوعية الدموية والسرطان وداء السكري والأمراض التنفسية المزمنة ","content":"\n","id":"3.4.1"},"/sdg-lucy-site/ar/8-b-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/8-b-1","title":"وجود استراتيجية وطنية مكتملة وموضوعة قيد التنفيذ تتعلق بتشغيل الشباب، سواء بوصفها استراتيجية قائمة بذاتها أو عنصراً من استراتيجية وطنية للتشغيل","content":"\n","id":"8.b.1"},"/sdg-lucy-site/ar/11-1-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/11-1-1","title":"نسبة السكان الحضريين الذين يعيشون في أحياء فقيرة أو مستوطنات غير رسمية أو مساكن غير لائقة","content":"\n","id":"11.1.1"},"/sdg-lucy-site/ar/9-4-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/9-4-1","title":"انبعاثات ثاني أكسـيد الكربون لكل وحدة من القيمـة المضافة ","content":"\n","id":"9.4.1"},"/sdg-lucy-site/ar/16-1-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/16-1-1","title":"عدد ضحايا القتل العمد لكل 100,000 نسمة، بحسب العمر ونوع الجنس","content":"\n","id":"16.1.1"},"/sdg-lucy-site/ar/17-18-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/17-18-2","title":"عدد البلدان التي لديها تشريعات إحصائية على الصعيد الوطني والتي تتقيد بالمبادئ الأساسية للإحصاءات الرسمية","content":"\n","id":"17.18.2"},"/sdg-lucy-site/ar/12-a-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/12-a-1","title":" كمية الدعم المقدم إلى البلدان النامية في مجالي البحث والتطوير من أجل إرساء أنماط الاستهلاك والإنتاج المستدامة والتكنولوجيا السليمة بيئيا","content":"\n","id":"12.a.1"},"/sdg-lucy-site/ar/3-d-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/3-d-1","title":"القـدرة على تنفيـذ اللوائح الصـحيـة الـدوليـة، والجـاهزيـة لمواجهة حالات الطوارئ الصحية","content":"\n","id":"3.d.1"},"/sdg-lucy-site/ar/2-2-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/2-2-2","title":"معدل انتشار ســوء التغذية (الوزن بالنســبة للطول > 2+ أو < 2 -نقطة من الانحراف المعياري عن متوسط معايير نمو الطفل لمنظمة الصــحة العالمية) بين الأطفال دون سـن الخامسة، مصنفين حسب النوع (الهزال وزيادة الوزن)","content":"\n","id":"2.2.2"},"/sdg-lucy-site/ar/6-3-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/6-3-1","title":"نسبة مياه الصرف الصحي المعالجة بطريقة آمنة","content":"\n","id":"6.3.1"},"/sdg-lucy-site/ar/17-3-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/17-3-1","title":"الاسـتثمار المباشر الأجنبي والمساعدة الإنمائية الرسمية والتعاون في ما بين بلدان الجنوب كنسبة من إجمالي الميزانية المحلية","content":"\n","id":"17.3.1"},"/sdg-lucy-site/ar/11-2-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/11-2-1","title":"نسبة السكان الذين تتوافر لهم وسائل النقل العام المناسبة، بحسب العمر والجنس والأشخاص ذوي الإعاقة","content":"\n","id":"11.2.1"},"/sdg-lucy-site/ar/16-10-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/16-10-2","title":" عدد ضحايا الاتجار بالبشر لكل 100,000 نسمة، بحسب الجنس والعمر وشكل الاستغلال","content":"\n","id":"16.10.2"},"/sdg-lucy-site/ar/17-7-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/17-7-1","title":"مجموع مبلغ التمويل المعتمـد للبلـدان النـاميـة من أجـل تعزيز تطوير تكنولوجيات ســليمة بيئياً ونقلها ونشــرها وتعميمها في البلدان النامية","content":"\n","id":"17.7.1"},"/sdg-lucy-site/ar/3-3-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/3-3-2","title":"معدل انتشار داء السل لكل 100,000 شخص","content":"\n","id":"3.3.2"},"/sdg-lucy-site/ar/16-1-3":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/16-1-3","title":" نسبة السكان الذين تعرضوا (أ) للعنف البدني و (ب) العنف النفسي و (ج) العنف الجنسي خلال الاثني عشر شهرا السابقة","content":"\n","id":"16.1.3"},"/sdg-lucy-site/ar/10-7-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/10-7-2","title":" عدد البلدان التي نفذت سياسات هجرة متسمة بحسن الإدارة","content":"\n","id":"10.7.2"},"/sdg-lucy-site/ar/1-b-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/1-b-1","title":"نسبة الإنفاق الحكومي المتكرر والرأسمالي المخصص للقطعات التى تفيد المرأة والفقراء والفئات الضعيفة على نحو غير متناسب","content":"\n","id":"1.b.1"},"/sdg-lucy-site/ar/6-4-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/6-4-2","title":"حجم الضغط الذي تتعرض له المياه: سحب المياه العذبة كنسبة من موارد المياه العذبة المتاحة","content":"\n","id":"6.4.2"},"/sdg-lucy-site/ar/12-4-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/12-4-1","title":"عدد الأطراف في الاتفاقات البيئية الدولية المتعددة الأطراف المتعلقة بنفايات المواد الخطرة وغيرها من المواد الكيميائية، التي تفي بتعهداتها التزاماتها في نقل المعلومات على النحو الذي يتطلبه كل اتفاق ذي صلة","content":"\n","id":"12.4.1"},"/sdg-lucy-site/ar/17-5-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/17-5-1","title":"عدد البلدان التي تعتمد وتنفذ نظماً لتشجيع الاستثمار لصالح أقل البلدان نمواً","content":"\n","id":"17.5.1"},"/sdg-lucy-site/ar/8-3-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/8-3-1","title":"نســبة العمالة غير الرسمية في غير العمالة الزراعية، بحسب الجنس","content":"\n","id":"8.3.1"},"/sdg-lucy-site/ar/11-6-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/11-6-2","title":"المتوسط السنوي لمستويات الجسيمات (على سبيل المثال الجيسمات من الفئة 2.5 والجسيمات من الفئة 10) في المدن (المرجَّح حسب السكان)","content":"\n","id":"11.6.2"},"/sdg-lucy-site/ar/16-b-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/16-b-1","title":"نسبة السكان الذين أبلغوا عن تعرضهم شخصيا لممارسات تمييزية أو تحرش خلال الاثني عشر شهرا السابقة لأسباب يحظر القانون الدولي لحقوق الإنسان التمييز على أساسها","content":"\n","id":"16.b.1"},"/sdg-lucy-site/ar/15-9-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/15-9-1","title":"التقدم المحرز نحو تحقيق الأهداف الوطنية المنشأة وفقا للهدف 2 من أهداف آيتشي المتعلقة بالتنوع البيولوجي من الخطة الاستراتيجية للتنوع البيولوجي للفترة 2011-2020","content":"\n","id":"15.9.1"},"/sdg-lucy-site/ar/14-6-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/14-6-1","title":" التقدم الذي تحرزه البلدان في مدى تنفيذ الصكوك الدولية الرامية إلى مكافحة صيد الأسماك غير المشروع وغير المبلغ عنه وغير المنظم","content":"\n","id":"14.6.1"},"/sdg-lucy-site/ar/17-6-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/17-6-1","title":"عدد اتفاقات التعاون في مجالي العلوم و/أو التكنولوجيا المبرمة بين البلدان، بحسب نوع التعاون","content":"\n","id":"17.6.1"},"/sdg-lucy-site/ar/8-2-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/8-2-1","title":" معدل النمو السنوي في الناتج المحلي الإجمالي لكل شخص عامل","content":"\n","id":"8.2.1"},"/sdg-lucy-site/ar/12-7-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/12-7-1","title":"عدد البلدان التي تنفذ السياسات وخطط العمل المتعلقة بالشراء العمومي المستدام","content":"\n","id":"12.7.1"},"/sdg-lucy-site/ar/5-3-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/5-3-1","title":"نسبة النساء اللاتي تتراوح أعمارهن بين و 20 سن 24 ة، واللاتي تزوجن أو ارتبطن بقرين قبل بلوغ سن الخامسة عشـرة وقبل بلوغ سن الثامنة عشر","content":"\n","id":"5.3.1"},"/sdg-lucy-site/ar/9-2-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/9-2-2","title":"العمالة في الصناعة التحويلية كنسبة من مجموع العمالة","content":"\n","id":"9.2.2"},"/sdg-lucy-site/ar/7-2-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/7-2-1","title":"حصة الطاقة المتجددة في مجموع الاسـتهلاك النهائي للطاقة","content":"\n","id":"7.2.1"},"/sdg-lucy-site/ar/15-a-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/15-a-1","title":"المساعدة الإنمائية الرسمية والنفقات العامة الموجهة لحفظ التنوع البيولوجي والنظم الإيكولوجية واستخدامها استخداماً مستداماً","content":"\n","id":"15.a.1"},"/sdg-lucy-site/ar/3-9-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/3-9-1","title":" معدل الوفيات المنسـوبة إلى الأســر المعيشــية وتلوث الهواء المحيط","content":"\n","id":"3.9.1"},"/sdg-lucy-site/ar/10-c-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/10-c-1","title":"تكاليف التحويلات المالية كنسبة من المبالغ المحولة","content":"\n","id":"10.c.1"},"/sdg-lucy-site/ar/12-4-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/12-4-2","title":"نصيب الفرد من توليد النفايات الخطرة ونسبة النفايات الخطرة المعالَجة، بحسب نوع المعالجة","content":"\n","id":"12.4.2"},"/sdg-lucy-site/ar/12-2-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/12-2-2","title":"الاستهلاك المادي المحلي ونصيب الفرد من الاستهلاك المادي المحلي ونسبة الاستهلاك المادي المحلي إلى الناتج المحلي الإجمال","content":"\n","id":"12.2.2"},"/sdg-lucy-site/ar/10-a-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/10-a-1","title":"نسبة بنود التعريفات الجمركية المطبقة على الواردات من والبلدان النامية المتمتعة بالإعفاء الكامل من الرسوم أقل البلدان نموا الجمركية","content":"\n","id":"10.a.1"},"/sdg-lucy-site/ar/9-a-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/9-a-1","title":"مجموع الدعم الدولي (المساعدة الإنمائية الرسمية بالإضافة إلى التدفقات الرسمية الأخرى) إلى الهياكل الأساسية","content":"\n","id":"9.a.1"},"/sdg-lucy-site/ar/3-2-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/3-2-2","title":"معدل وفيات المواليد","content":"\n","id":"3.2.2"},"/sdg-lucy-site/ar/17-14-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/17-14-1","title":"عدد البلدان التي لديها آليات لتعزيز اتساق سياسات التنمية المستدامة","content":"\n","id":"17.14.1"},"/sdg-lucy-site/ar/12-5-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/12-5-1","title":"معدل إعادة التدوير على الصعيد الوطني، وعدد أطنان المواد المعاد تدويرها","content":"\n","id":"12.5.1"},"/sdg-lucy-site/ar/1-4-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/1-4-2","title":"نسبة مجموع السكان البالغين الذين لديهم حقوق ،ً مضمونة لحيازة الأرض، و (أ) لديهم مستندات معترف بها قانونا و (ب) يعتبرون حقوقهم في الأرض مضمونة، بحسب الجنس ونوع الحيازة","content":"\n","id":"1.4.2"},"/sdg-lucy-site/ar/9-3-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/9-3-1","title":"نسـبة الصناعات الصـغيرة الحجم من مجموع القيمة المضافة من الصناعات","content":"\n","id":"9.3.1"},"/sdg-lucy-site/ar/3-8-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/3-8-1","title":"تغطية توافر الخدمات الصحية الأساسية (المعرَّفة باعتبارها متوسط التغطية التي توفر الخدمات الأساسية المستندة إالى الإجراءات الكاشفة التي تشمل الصحة الإنجابية، وصحة الأمهات، والمواليد الجدد، والأطفال، والأمراض المعدية، والأمراض غير المعدية، والقدرة على توفير الخدمات، وإمكانية الوصول إاليها لدى السكان عموماً والأشد حرماناً خصوصاً) ","content":"\n","id":"3.8.1"},"/sdg-lucy-site/ar/5-3-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/5-3-2","title":" نسـبة الفتيات والنساء اللاتي تتراوح أعمارهن بين 15و49 عاماً، واللاتي خضعن لعملية تشـويه/بتر الأعضاء التناسلية، بحسب العمر","content":"\n","id":"5.3.2"},"/sdg-lucy-site/ar/11-7-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/11-7-1","title":"متوسط حصة المنطقة السكنية بالمدن التي تمثل فضاء مفتوحا للاستخدام العام للجميع، بحسب العمر والجنس والأشخاص ذوي الإعاقة","content":"\n","id":"11.7.1"},"/sdg-lucy-site/ar/2-a-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/2-a-1","title":"مؤشر التوجه في المجال الزراعي للنفقات الحكومية","content":"\n","id":"2.a.1"},"/sdg-lucy-site/ar/7-1-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/7-1-1","title":"نسبة السكان المستفيدين من خدمات الكهرباء","content":"\n","id":"7.1.1"},"/sdg-lucy-site/ar/2-1-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/2-1-2","title":"معدل انتشار انعدام الأمن الغذائي المتوسـط أو الشـديد وسط السكان، استنادا إلى مقياس المعاناة من انعدام الأمن الغذائي","content":"\n","id":"2.1.2"},"/sdg-lucy-site/ar/9-1-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/9-1-1","title":" نسـبة سـكان الريف الذين يعيشـون على بعد كيلومترين من طريق صالحة للاستعمال في جميع الفصول","content":"\n","id":"9.1.1"},"/sdg-lucy-site/ar/6-a-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/6-a-1","title":"مقدار المساعدة الإنمائية الرسمية المتصلة بالمياه والصرف الصحي التي تعد جزءاً من خطة إنفاق تتولى الحكومة تنسيقها","content":"\n","id":"6.a.1"},"/sdg-lucy-site/ar/4-4-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/4-4-1","title":"نسـبة الشـباب والبالغين الذين تتوافر لديهم مهارات تكنولوجيا المعلومات والاتصالات، بحسب نوع المهار","content":"\n","id":"4.4.1"},"/sdg-lucy-site/ar/7-b-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/7-b-1","title":"الاســتثمارات في مجال كفاءة الطاقة كنسـبة من الناتج المحلي الإجمالي ومبلغ الاستثمار المباشر الأجنبي، في شكل تحويلات مالية، من أجـل توفير الهياكـل الأسـاسـية والتكنولوجيا اللازمة لأغراض التنمية المستدامة","content":"\n","id":"7.b.1"},"/sdg-lucy-site/ar/14-4-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/14-4-1","title":"نسبة الأرصدة السمكية الموجودة ضمن المستويات المستدامة بيولوجيا","content":"\n","id":"14.4.1"},"/sdg-lucy-site/ar/9-2-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/9-2-1","title":"القيمة المضـافة التصـنيعية كنسـبة من الناتج المحلي الإجمالي للفرد","content":"\n","id":"9.2.1"},"/sdg-lucy-site/ar/16-6-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/16-6-1","title":"النفقات الحكومية الرئيسية كنسبة من الميزانية الأصلية المعتمدة، بحسب القطاع (أو بحسب رموز الميزانية أو ما شابه)","content":"\n","id":"16.6.1"},"/sdg-lucy-site/ar/16-a-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/16-a-1","title":"وجود مؤسسات وطنية مستقلة لحقوق الإنسان وفقا لمبادئ باريس","content":"\n","id":"16.a.1"},"/sdg-lucy-site/ar/3-6-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/3-6-1","title":"معدلات الوفيات الناجمة عن الإصابات جراء حوادث المرور على الطرق","content":"\n","id":"3.6.1"},"/sdg-lucy-site/ar/9-1-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/9-1-2","title":"عدد الركاب وحجم الشحنات، بحسب وسيلة النقل","content":"\n","id":"9.1.2"},"/sdg-lucy-site/ar/14-c-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/14-c-1","title":"عدد البلدان التي تحرز تقدماً في التصديق على صكوك متعلقة بالمحيطات تنفـذ القـانون الـدولي، وفي قبول تلـك الصكوك وتنفيذها بموجب أطر قانونية وسياساتية ومؤسسية، على النحو الوارد في اتفاقية الأمم المتحدة لقانون البحار، من أجل حفظ المحيطات ومواردها، واستخدامها على نحو مستدام","content":"\n","id":"14.c.1"},"/sdg-lucy-site/ar/9-5-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/9-5-2","title":"العاملون في مجال البحـث (بمكـافئ الـدوام الكـامـل) لكـل مليون نسمة","content":"\n","id":"9.5.2"},"/sdg-lucy-site/ar/4-3-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/4-3-1","title":" معـدل مشـاركـة الشــبـاب والكبـار في التعليم الرسمي ً وغير الرسمي السـابقـة، والتـدريــب خلال الاثني عشـر شـهرا بحسب الجنس","content":"\n","id":"4.3.1"},"/sdg-lucy-site/ar/6-5-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/6-5-1","title":"درجة تنفيذ الإدارة المتكاملة للموارد المائية (صفر-100)","content":"\n","id":"6.5.1"},"/sdg-lucy-site/ar/7-3-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/7-3-1","title":" كثـافة الطـاقة التي تقـاس من حيـث الطـاقة الأوليـة والنـاتج المحلي الإجمال","content":"\n","id":"7.3.1"},"/sdg-lucy-site/ar/5-b-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/5-b-1","title":"نســبة الأفراد الذين يملكون الهاتف المحمول، حســب نوع الجنس","content":"\n","id":"5.b.1"},"/sdg-lucy-site/ar/10-6-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/10-6-1","title":" نسبة عضوية البلدان النامية وحقوقها في التصويت في المنظمات الدولية","content":"\n","id":"10.6.1"},"/sdg-lucy-site/ar/2-b-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/2-b-1","title":"إعانات الصادرات الزراعية","content":"\n","id":"2.b.1"},"/sdg-lucy-site/ar/2-1-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/2-1-1","title":"معدل انتشار نقص التغذية","content":"\n","id":"2.1.1"},"/sdg-lucy-site/ar/16-4-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/16-4-2","title":"نسبة الأسلحة المضبوطة أو المعثور عليها أو المسلّمة التي تحرَّت سلطة مختصة عن مصدرها غير المشروع/ظروفها أو تثبّت من ذلك، تمشياً مع الصكوك الدولية","content":"\n","id":"16.4.2"},"/sdg-lucy-site/ar/3-3-5":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/3-3-5","title":"عدد الأشـخاص الذين يسـتلزمون تدخلات لمكافحة الأمراض المدارية المهملة","content":"\n","id":"3.3.5"},"/sdg-lucy-site/ar/11-5-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/11-5-1","title":"عدد الأشخاص المتوفين والمفقودين ومن تأثروا مباشرة بسبب الكوارث من بين كل 100,000 شخص من السكان","content":"\n","id":"11.5.1"},"/sdg-lucy-site/ar/7-1-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/7-1-2","title":"نسبة السكان الذي يعتمدون أساسياً على الوقود التكنولوجيا النظيفين","content":"\n","id":"7.1.2"},"/sdg-lucy-site/ar/4-2-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/4-2-2","title":"معدل المشاركة في التعلُّم المنظَّم (قبل سنة واحدة من سن الالتحاق الرسمي بالتعليم الابتدائي)، بحسب الجنس","content":"\n","id":"4.2.2"},"/sdg-lucy-site/ar/12-c-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/12-c-1","title":"مقدار إعانات الوقود الأحفوري لكل وحدة من الناتج المحلي الإجمالي (الإنتاج والاستهلاك) وكنسبة من مجموع النفقات الوطنية على الوقود الأحفوري","content":"\n","id":"12.c.1"},"/sdg-lucy-site/ar/3-5-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/3-5-2","title":"الاستعمال الضار للكحول، محدداً وفقاً للظروف الوطنية في إطار استهلاك الفرد الواحد من الكحول (سن 15 سنة فأكثر) في سنة تقويمية، باللترات من الكحول الصافي","content":"\n","id":"3.5.2"},"/sdg-lucy-site/ar/5-5-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/5-5-1","title":" نسـبة المقاعد التي تشغلها النساء في (أ) البرلمانات الوطنية، و (ب) الحكومات المحلية","content":"\n","id":"5.5.1"},"/sdg-lucy-site/ar/8-9-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/8-9-1","title":"الناتج المحلي الإجمالي للسـياحة المباشـرة كنسـبة من مجموع الناتج المحلي الإجمالي ومن معدل النمو","content":"\n","id":"8.9.1"},"/sdg-lucy-site/ar/15-7-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/15-7-1","title":"نسبة الأحياء البرية المتجر بها، التي جرى صيدها أو الاتجار بها على نحو غير مشروع","content":"\n","id":"15.7.1"},"/sdg-lucy-site/ar/17-12-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/17-12-1","title":"متوسط التعريفات الجمركية التي تواجههـا البلـدان النامية وأقل البلدان نموا والدول الجزرية الصغيرة النامية","content":"\n","id":"17.12.1"},"/sdg-lucy-site/ar/17-4-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/17-4-1","title":"تكاليف خدمة الدين كنسبة من صادرات السلع والخدمات","content":"\n","id":"17.4.1"},"/sdg-lucy-site/ar/17-8-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/17-8-1","title":"نسبة الأفراد الذين يستخدمون الإنترنت","content":"\n","id":"17.8.1"},"/sdg-lucy-site/ar/13-3-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/13-3-2","title":"عدد البلدان التي أبلغت عن تعزيز قدرتها المؤسسية والهيكلية والفردية على تنفيذ تدابير التكيف والتخفيف ونقل التكنولوجيا والتدابير الإنمائية","content":"\n","id":"13.3.2"},"/sdg-lucy-site/ar/6-1-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/6-1-1","title":"نسبة السكان الذين يستفيدون من خدمات مياه الشرب التي تدار بطريقة مأمونة","content":"\n","id":"6.1.1"},"/sdg-lucy-site/ar/5-c-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/5-c-1","title":"نسـبة البلدان التي لديها نظم لتخصيص وتتبع المخصصات العامة المرصودة للمساواة بين الجنسين وتمكين المرأة","content":"\n","id":"5.c.1"},"/sdg-lucy-site/ar/2-a-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/2-a-2","title":"مجموع التدفقات الرسمية (المسـاعدة الإنمائية الرسمية مضـافا إليها تدفقات رسمية أخرى) إلى القطاع الزراعي","content":"\n","id":"2.a.2"},"/sdg-lucy-site/ar/13-a-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/13-a-1","title":"المبلغ السنوي الذي يجمع سنوياً مقيّماً بدولار الولايات المتحدة في الفترة بين عامي 2020 و 2025 بهدف الوفاء بالتزام توفير 100 بليون دولار","content":"\n","id":"13.a.1"},"/sdg-lucy-site/ar/9-5-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/9-5-1","title":"الإنفاق على البحث والتطوير كنسـبة من الناتج المحلي الإجمال","content":"\n","id":"9.5.1"},"/sdg-lucy-site/ar/8-5-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/8-5-1","title":"متوسـط الدخل في الساعة للنساء والرجال العاملين، بحسب الوظيفة والعمر والأشخاص ذوي الإعاقة","content":"\n","id":"8.5.1"},"/sdg-lucy-site/ar/16-2-3":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/16-2-3","title":" نسبة الشابات والشبان الذين تتراوح أعمارهم بين 18 سنة و 29 سنة الذين تعرضوا للعنف الجنسي قبل سن الثامنة عشرة","content":"\n","id":"16.2.3"},"/sdg-lucy-site/ar/4-2-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/4-2-1","title":"نســـــبة الأطفال دون الخامسة الذين هم ماضـون على المسار الصـحيح من حيث النمو في مجالات الصحة، والتعلم، والرفاه النفسي والاجتماعي، بحسب الجنس","content":"\n","id":"4.2.1"},"/sdg-lucy-site/ar/8-4-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/8-4-2","title":"الاسـتهلاك المادي المحلي ونصـيب الفرد من الاسـتهلاك المادي المحلي ونسـبة الاستهلاك المادي المحلي إلى الناتج المحلي الإجمال","content":"\n","id":"8.4.2"},"/sdg-lucy-site/ar/10-7-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/10-7-1","title":"تكاليف التوظيف التي يتحملها الموظف كنسبة من الإيرادات السنوية في بلد المقصد\\","content":"\n","id":"10.7.1"},"/sdg-lucy-site/ar/4-5-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/4-5-1","title":"مؤشرات التكافؤ (أنثى/ذكر، وريفي/حضري، وأدنى/أعلى خمس السكان ثراء، وفئات أخرى مثل ذوي الإعاقة وأفراد الشعوب الأصـلية، والمتضـررين من النزاعات، متى توافرت البيانات عن ذلك) لجميع مؤشرات التعليم المندرجة في هذه القائمة، التي يمكن تصنيفها","content":"\n","id":"4.5.1"},"/sdg-lucy-site/ar/8-8-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/8-8-2","title":" مسـتوى امتثال البلـدان لحقوق العمـل (حريـة تكوين الجمعيات والمفاوضة الجماعية) اســـتناداً إلى نصـوص منظمة العمل الدولية والتشريعات الوطنية، بحسب الجنس ووضع المهاجرين","content":"\n","id":"8.8.2"},"/sdg-lucy-site/ar/6-5-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/6-5-2","title":"نسبة مناطق أحواض المياه العابرة للحدود التي لها ترتيبات تنفيذية تتعلق بالتعاون في مجال المياه","content":"\n","id":"6.5.2"},"/sdg-lucy-site/ar/15-1-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/15-1-2","title":"نسبة المواقع الهامة التي تجسد التنوع البيولوجي لليابسة والمياه العذبة والتي تشملها المناطق المحمية، بحسب نوع النظام الإيكولوجي","content":"\n","id":"15.1.2"},"/sdg-lucy-site/ar/3-3-3":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/3-3-3","title":"دد حالات الإصابة بالملاريا لكل 1,000 شخص","content":"\n","id":"3.3.3"},"/sdg-lucy-site/ar/17-18-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/17-18-1","title":"نسبة مؤشرات التنمية المستدامة الموضوعة على الصعيد الوطني، وفقاً للمبادئ الأساسية للإحصاءات الرسمية","content":"\n","id":"17.18.1"},"/sdg-lucy-site/ar/3-b-3":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/3-b-3","title":"نســبة المرافق الصـحية المتاحة فيها مجموعة أساسـية من الأدوية الضرورية التي تفي بالغرض بكلفة ميسورة على الدوام","content":"\n","id":"3.b.3"},"/sdg-lucy-site/ar/15-5-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/15-5-1","title":"مؤشر القائمة الحمراء","content":"\n","id":"15.5.1"},"/sdg-lucy-site/ar/14-b-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/14-b-1","title":"التقدم الذي تحرزه البلدان في مدى تطبيق إطار قانوني/تنظيمي/سياساتي/مؤسسي يتعرف بحقوق مصائد الأسماك الصغيرة في الوصول إالى الموارد البحرية ويحمي تلك الحقوق","content":"\n","id":"14.b.1"},"/sdg-lucy-site/ar/12-3-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/12-3-1","title":"مؤشر الخسائر الغذائية العالمية","content":"\n","id":"12.3.1"},"/sdg-lucy-site/ar/4-7-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/4-7-1","title":"مدى تعميم ‘1 ‘تعليم المواطنة العالمية و ‘2‘ التعليم من أجل التنمية المسـتدامة، بما في ذلك المساواة بين الجنسين وحقوق الإنسان، وذلك على جميع الصعد في (أ) السياسات التعليمية على الصعيد الوطني و؛ (ب) المناهج الدراسية ؛ و (ج) تدريب المعلمين؛ و(د) تقييم الطلاب","content":"\n","id":"4.7.1"},"/sdg-lucy-site/ar/3-9-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/3-9-2","title":"معدل الوفيات المنسـوب إلى المياه غير المأمونة، وخدمات الصـرف الصحي غير المأمونة والافتقار إلى المرافق الصـحية (التعرض لخدمات غير مأمونة في توفير المياه وخدمات الصـرف الصـحي والنظافة الصحية للجميع)","content":"\n","id":"3.9.2"},"/sdg-lucy-site/ar/17-1-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/17-1-2","title":"نسبة الميزانية المحلية الممولة من الضرائب المحلية","content":"\n","id":"17.1.2"},"/sdg-lucy-site/ar/6-b-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/6-b-1","title":"نسـبة الوحدات الإدارية المحلية التي لديها سـياسات وإجراءات تنفيذية راسـخة في ما يتعلق بمشــاركة المجتمعات المحلية في إدارة خدمات المياه والصرف الصحي","content":"\n","id":"6.b.1"},"/sdg-lucy-site/ar/14-5-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/14-5-1","title":"طاق المناطق المحمية مقابل المناطق البحرية","content":"\n","id":"14.5.1"},"/sdg-lucy-site/ar/13-1-3":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/13-1-3","title":"نسبة الحكومات المحلية التي تعتمد وتنفذ استراتيجيات محلية للحد من مخاطر الكوارث تمشياً مع الاستراتيجيات الوطنية  للحد من مخاطر الكوارث","content":"\n","id":"13.1.3"},"/sdg-lucy-site/ar/15-1-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/15-1-1","title":"مساحة الغابات كنسبة من مجموع مساحة اليابسة","content":"\n","id":"15.1.1"},"/sdg-lucy-site/ar/5-a-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/5-a-2","title":"نسـبة البلدان التي يكفل فيها الإطار القانوني (بما في ذلك القانون العرفي) للمرأة المساواة في الحقوق في ملكية الأراضي و/أو السيطرة عليها ","content":"\n","id":"5.a.2"},"/sdg-lucy-site/ar/17-17-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/17-17-1","title":"المبلغ بدولارات الولايات المتحدة المرصـود لـ (أ) الشراكات بين القطاعين العام والخاص و (ب) شـراكات المجتمع المدني","content":"\n","id":"17.17.1"},"/sdg-lucy-site/ar/7-a-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/7-a-1","title":"التـدفقـات الماليـة الدوليـة الموجهـة إلى البلـدان النـاميـة لدعم أنشـطة البحث والتطوير في مجالات الطاقة النظيفة وإنتاج الطاقة المتجددة، بما في ذلك النظم الهجينة","content":"\n","id":"7.a.1"},"/sdg-lucy-site/ar/14-a-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/14-a-1","title":"نسبة مجموع الميزانية المخصصة للبحوث في مجال التكنولوجيا البحرية","content":"\n","id":"14.a.1"},"/sdg-lucy-site/ar/1-5-4":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/1-5-4","title":" نسبة الحكومات المحلية التي تعتمد وتنفذ استراتيجيات مع الاستراتيجيات الوطنية محلية للحد من مخاطر الكوارث تمشيا للحد من مخاطر الكوارث","content":"\n","id":"1.5.4"},"/sdg-lucy-site/ar/3-8-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/3-8-2","title":"نسبة السكان الذين تصرف أسرهم المعيشية نفقات كبيرة على الصـحة محسـوبة كحصـة من مجموع إنفاق الأسـر المعيشـية أو دخلها","content":"\n","id":"3.8.2"},"/sdg-lucy-site/ar/11-a-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/11-a-1","title":"نسبة السكان الذين يعيشون في المدن التي تنفذ خططاً إنمائية مدنية وإقليمية، وتدمج التوقعات السكانية والاحتياجات من الموارد، بحسب حجم المدينة","content":"\n","id":"11.a.1"},"/sdg-lucy-site/ar/5-4-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/5-4-1","title":"نسبة الوقت المخصص للأعمال المنزلية وأعمال الرعاية غير المدفوهة الأجر، بحسب الجنس والعمر والمكان","content":"\n","id":"5.4.1"},"/sdg-lucy-site/ar/3-b-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/3-b-2","title":"مجموع صـافي المساعدة الإنمائية الرسمية المقدمة إلى القطاعات الصحية الأساسية والبحوث الطبية ","content":"\n","id":"3.b.2"},"/sdg-lucy-site/ar/2-5-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/2-5-1","title":"عـدد الموارد الجينية النباتيـة والحيوانية للأغـذية والزراعة المودعة في مرافق للحفظ على المدى المتوسط أو الطويل ","content":"\n","id":"2.5.1"},"/sdg-lucy-site/ar/15-4-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/15-4-2","title":"مؤشر الغطاء الأخضر الجبلي ","content":"\n","id":"15.4.2"},"/sdg-lucy-site/ar/1-5-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/1-5-2","title":"الخسائر الاقتصادية التي تعزى مباشرة إلى الكوارث مقابل الناتج المحلي الإجمالي العالمي","content":"\n","id":"1.5.2"},"/sdg-lucy-site/ar/3-7-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/3-7-2","title":"معدل الولادات لدى المراهقات (10-14 سنة؛ و 15-19 سنة) لكل 1,000 امرأة في تلك الفئة العمرية","content":"\n","id":"3.7.2"},"/sdg-lucy-site/ar/4-c-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/4-c-1","title":"نسـبة المعلمين في (أ) مرحلة ما قبل التعليم الابتدائي؛ و(ب) التعليم الابتدائي؛ و (ج) التعليم الإعدادي؛ و (د) التعليم الثانوي، الذين حصلوا على الأقل على الحد الأدنى من التدريب المنظَّم للمعلمين (كالتدريـب التربوي)، قبل الخـدمـة أو في أثنـاء الخدمة، اللازم للتدريس على المستوى المناسب في بلد معين","content":"\n","id":"4.c.1"},"/sdg-lucy-site/ar/17-6-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/17-6-2","title":"الاشـتراكات في الإنترنت السلكي ذي النطاق العريض لكل 100 من السكان، بحسب السرعة","content":"\n","id":"17.6.2"},"/sdg-lucy-site/ar/13-b-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/13-b-1","title":"عدد أقل البلدان نمواً والدول الجزرية الصغيرة النامية التي تتلقى دعماً متخصصاً ومقدار الدعم المقدم، بما في ذلك التمويل والتكنولوجيا وبناء القدرات، لآليات تحسين مستوي قدرات التخطيط والإدارة الفعالين المتعلقين بتغير المناخ، بما في ذلك التركيز على النساء والشباب والمجتمعات المحلية والمهمشة ","content":"\n","id":"13.b.1"},"/sdg-lucy-site/ar/16-5-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/16-5-2","title":"نسبة الأعمال التجارية التي اتصلت مرة واحدة على الأقل بمسؤول حكومي ودفعت رشوة إلى مسؤول حكومي أو طلب منها أولئك المسؤولون الحكوميون دفع رشوة، خلال الاثني عشر شهرا السابقة","content":"\n","id":"16.5.2"},"/sdg-lucy-site/ar/8-7-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/8-7-1","title":"نسـبة الأطفال الذين تتراوح أعمارهم بين 5 سـنوات و 17 سـنة والمنخرطين في ســوق عمل الأطفال وعددهم، بحســب الجنس والعمر","content":"\n","id":"8.7.1"},"/sdg-lucy-site/ar/5-6-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/5-6-1","title":"نســبة النسـاء اللاتي تتراوح أعمارهن بين 15 سـنة و49 ســنة واللاتي يتخذن بأنفسهن قرارات مسـتنيرة بشـأن العلاقات الجنسـية، واسـتخدام وسـائل منع الحمل، والرعاية المتعلقة بالصحة الإنجابية","content":"\n","id":"5.6.1"},"/sdg-lucy-site/ar/3-1-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/3-1-2","title":"نسبة الولادات التي يشرف عليها أخصائيون صحّيون مَهَرة ","content":"\n","id":"3.1.2"},"/sdg-lucy-site/ar/17-11-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/17-11-1","title":"حصة البلدان النامية وأقل البلدان نمواً من الصادرات العالمية","content":"\n","id":"17.11.1"},"/sdg-lucy-site/ar/2-3-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/2-3-2","title":"متوسـط دخل صغار منتجي الأغذية، بحسـب الجنس والوضع من حيث الانتماء إلى الشعوب الأصلية","content":"\n","id":"2.3.2"},"/sdg-lucy-site/ar/1-a-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/1-a-2","title":"نسبة الإنفاق الحكومي على الخدمات الاساسية (التعليم والصحة والضمان الاجتماعي)","content":"\n","id":"1.a.2"},"/sdg-lucy-site/ar/11-b-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/11-b-2","title":"نسبة الحكومات المحلية التي تعتمد وتنفذ استراتيجيات محلية للحد من مخاطرالكوارث تمشيا مع الاستراتيجيات الوطنية للحد من مخاطر الكوارث","content":"\n","id":"11.b.2"},"/sdg-lucy-site/ar/8-6-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/8-6-1","title":"نسـبة الشـباب (الذين تتراوح أعمارهم بين 15 سـنة و 24 سنة) خارج دائرة التعليم والعمالة والتدريب","content":"\n","id":"8.6.1"},"/sdg-lucy-site/ar/2-5-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/2-5-2","title":" نسـبة السـلالات المحلية التي تصـنف على أنها معرضة للخطر، أو غير معرضـة للخطر، أو تقف عند مسـتوى غير معروف لخطر انقراضها","content":"\n","id":"2.5.2"},"/sdg-lucy-site/ar/16-7-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/16-7-1","title":"نسبة الوظائف (بحسب العمر، والجنس، والأشخاص ذوي الإعاقة، والفئات السكانية) في المؤسسات العامة (الهيئات التشـريعية الوطنية والمحلية، والخدمة العامة، والسـلطة القضائية) مقارنة بمستويات التوزيع على الصعيد الوطن","content":"\n","id":"16.7.1"},"/sdg-lucy-site/ar/12-b-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/12-b-1","title":"عدد الاستراتيجيات وأ السياسات و خطط العمل المنفذة في مجال السياحة المستدامة المتفق على أدوات رصدها وتقييمها","content":"\n","id":"12.b.1"},"/sdg-lucy-site/ar/15-8-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/15-8-1","title":"نسبة البلدان التي تعتمد تشريعات وطنية ذات صلة، وتخصص موارد كافية لمنع إدخال الأنواع الغريبة الغازية إلى النظم الإيكولوجية أو مراقبتها","content":"\n","id":"15.8.1"},"/sdg-lucy-site/ar/9-b-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/9-b-1","title":"نسـبة القيمة المضافة للصناعة التكنولوجية المتوسـطة والمتقدمة من مجموع القيمة المضافة","content":"\n","id":"9.b.1"},"/sdg-lucy-site/ar/8-5-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/8-5-2","title":"معـدل البطالة، بحسـب الجنس والعمر والأشـخـاص ذوي الإعاقة","content":"\n","id":"8.5.2"},"/sdg-lucy-site/ar/16-1-4":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/16-1-4","title":"نسبة السكان الذين يشعرون بالأمان عند تجوالهم على الأقدام بمفردهم في أنحاء المنطقة التي يعيشون فيها","content":"\n","id":"16.1.4"},"/sdg-lucy-site/ar/16-2-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/16-2-2","title":"عدد ضحايا الاتجار بالبشر لكل 100,000 نسمة، بحسب الجنس والعمر وشكل الاستغلال","content":"\n","id":"16.2.2"},"/sdg-lucy-site/ar/8-10-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/8-10-1","title":"(أ) عدد فروع المصارف التجارية لكل 100,000 شخص بالغ، و (ب) عدد أجهزة الصرف الآلي لكل 100,000 شخص بالغ","content":"\n","id":"8.10.1"},"/sdg-lucy-site/ar/17-13-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/17-13-1","title":"لوحة متابعة حالة الاقتصاد الكلي","content":"\n","id":"17.13.1"},"/sdg-lucy-site/ar/16-4-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/16-4-1","title":"القيمة الإجمالية للتدفقات المالية غير المشروعة الداخلة والخارجة (بالقيمة الحالية لدولارات الولايات المتحدة)","content":"\n","id":"16.4.1"},"/sdg-lucy-site/ar/17-16-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/17-16-1","title":"عدد البلدان التي أبلغت عن إحراز تقدم في ما يتعلق بأطر رصد فعالية التنمية لأصحاب المصلحة المتعددين التي تدعم تحقيق أهداف التنمية المستدامة","content":"\n","id":"17.16.1"},"/sdg-lucy-site/ar/16-2-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/16-2-1","title":"نسبة الشابات والشبان الذين تتراوح أعمارهم بين  18 سنة و 29 سنة الذين تعرضوا للعنف الجنسي قبل سن الثامنة عشرة","content":"\n","id":"16.2.1"},"/sdg-lucy-site/ar/5-1-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/5-1-1","title":"مـا إذا كـان ثمـة أطر قـانونيـة قـائمـة، أم لا، من أجـل تعزيز وإنفاذ ورصد المساواة وعدم التمييز على أساس الجنس","content":"\n","id":"5.1.1"},"/sdg-lucy-site/ar/5-2-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/5-2-2","title":"نسبة النساء والفتيات في الخامسة عشرة وما فوق اللاتي تعرضن لعنف جنسي من أشخاص غير العشير، خلال الاثني عشر شهراً السابقة، بحسب العمر ومكان حدوث العنف","content":"\n","id":"5.2.2"},"/sdg-lucy-site/ar/11-4-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/11-4-1","title":"نصيب الفرد من مجموع النفقات (في القطاعين العام والخاص) التي تُنفق لصون وحماية وحفظ جميع اصناف التراث الثقافي والطبيعي، بحسب نوع التراث (ثقافي وطبيعي ومختلط، وما يعتبره مركز التراث العالمي تراثاً) ومستوى الحكم (وطني وإقليمي، ومحلي/بلدي)، ونوع الإنفاق (إنفاق تشغيلي/استثمار) ونوع التمويل المقدم من القطاع الخاص (تبرعات عينية، وتمويل من القطاع الخاص غير الربحي وبرامج الرعاية)","content":"\n","id":"11.4.1"},"/sdg-lucy-site/ar/17-1-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/17-1-1","title":"مجموع الإيرادات الحكومية الإجمالية كنسبة من الناتج المحلي الإجمالي، بحسب المصدر ","content":"\n","id":"17.1.1"},"/sdg-lucy-site/ar/4-1-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/4-1-1","title":"نســبة الأطفال والشــباب (أ) في الصــف الثاني/الثالث؛  و (ب) في نهـايـة المرحلـة الابتـدائيـة؛ و (ج) في نهـايـة المرحلـة الأولى من التعليم الثـــانوي، الـذين يحققون على الأقـــل الحـــد الأدنى من مستوى الكفاءة في ’1 ’القراءة، و’2 ’الرياضيات، بحسب الجنس","content":"\n","id":"4.1.1"},"/sdg-lucy-site/ar/4-a-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/4-a-1","title":"نسـبة المدارس التي تحصـل على (أ) الطاقة الكهربائية؛ و(ب) شــبكة الإنترنت لأغراض تعليمية؛ و (ج) أجهزة حاسـوبية لأغراض التعليم؛ و (د) بنى تحتية ومواد ملائمة لاحتياجات الطلاب ذوي الإعاقة؛ و (هـــ) مياه الشـرب الأسـاسـية؛ و (و) مرافق صـحية أسـاسية غير مختلطة؛ و (ز) مرافق أسـاسـية لغسـل الأيدي (وفق التعاريف الواردة في مؤشــر توفير المياه وخدمات الصـرف الصحي والنظافة الصحية للجميع)","content":"\n","id":"4.a.1"},"/sdg-lucy-site/ar/15-c-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/15-c-1","title":"نسبة الأحياء البرية المتجر بها، التي جرى صيدها أو الاتجار بها على نحو غير مشروع","content":"\n","id":"15.c.1"},"/sdg-lucy-site/ar/11-7-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/11-7-2","title":"نسبة ضحايا التحرش البدني أو الجنسي بحسب العمر، والجنس، ووضع الأشخاص ذوي الإعاقة، ومكان حدوثه خلال الاثني عشر شهرا السابقة","content":"\n","id":"11.7.2"},"/sdg-lucy-site/ar/13-2-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/13-2-1","title":"عدد البلدان التي أبلغت عن وضع أو تفعيل سياسة/استراتيجية/خطة متكاملة تزيد قدراتها على التكيف مع الآثار الضارة لتغير المناخ وتعزز القدرة على التأقلم مع المناخ، والتنمية القائمة على ابنعاثات غازات الدفيئة المنخفضة على نحو لا يهدد إنتاج الأغذية (بما في ذلك وضع خطط تكيُّف وطنية، وتقديم مساهمة محددة على الصعيد الوطني، وبلاغات وطنية، وتقرير عن المستجدات لفترة السنتين، أو غير ذلك)","content":"\n","id":"13.2.1"},"/sdg-lucy-site/ar/4-b-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/4-b-1","title":"حجم تدفقات المسـاعدة الإنمائية الرسمية لتقديم المنح الدراسية، بحسب القطاع ونوع الدراسة","content":"\n","id":"4.b.1"},"/sdg-lucy-site/ar/1-2-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/1-2-2","title":"نسبة الرجال والنساء والأطفال من جميع الاعمار الذين يعانون الفقر بجميع ابعاده وفقا للتعريفات الوطنية","content":"\n","id":"1.2.2"},"/sdg-lucy-site/ar/12-8-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/12-8-1","title":"مدى تعميم مراعاة ’1’ تعليم المواطنة العالمية و ’2’ التعليم من أجل التنمية المستدامة (بما في ذلك التثقيف بشأن تغير المناخ) في (أ) السياسات التربوية الوطنية، و (ب) المناهج الدراسية و (ج) تدريب المعلمين و (د) تقييم الطلاب ","content":"\n","id":"12.8.1"},"/sdg-lucy-site/ar/16-1-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/16-1-2","title":"الوفيات المتصلة بالنزاعات لكل 100,000 نسمة، بحسب العمر والجنس والسبب","content":"\n","id":"16.1.2"},"/sdg-lucy-site/ar/6-2-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/6-2-1","title":"نسبة السـكان الذين يســتفيدون (أ) من الإدارة الســليمة لخدمات الصـرف الصحي و (ب) مرافق غسـل اليدين بالصابون والمياه","content":"\n","id":"6.2.1"},"/sdg-lucy-site/ar/17-10-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/17-10-1","title":"المتوسط المرجح للتعريفات الجمركية في جميع أنحاء العال","content":"\n","id":"17.10.1"},"/sdg-lucy-site/ar/17-18-3":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/17-18-3","title":"عدد البلدان التي لديها خطة إحصـائية وطنية ممولة بالكامل وقيد التنفيذ، بحسب مصدر التمويل","content":"\n","id":"17.18.3"},"/sdg-lucy-site/ar/5-6-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/5-6-2","title":" عـدد البلدان التي لديها قوانين وأنظمـة تكفـل حصـول النساء والرجال الذين في سن 15 سنة فأكثر على خدمات الرعاية والمعلومات والتثقيف في مجال الصحة الجنسـية والإنجابية على نحو كامل وعلى قدم المساواة","content":"\n","id":"5.6.2"},"/sdg-lucy-site/ar/10-5-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/10-5-1","title":" مؤشرات السلامة المالية","content":"\n","id":"10.5.1"},"/sdg-lucy-site/ar/8-a-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/8-a-1","title":"المعونة المقدمة من أجل الالتزامات والمدفوعات المتصلة بالتجارة","content":"\n","id":"8.a.1"},"/sdg-lucy-site/ar/3-3-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/3-3-1","title":"عدد الإصـابات الجديدة بفيروس نقص المناعة البشـرية لكل 1,000 شـخص غير مصاب من السكان بحسـب الجنس والعمر والفئات الرئيسية من السكان ","content":"\n","id":"3.3.1"},"/sdg-lucy-site/ar/8-4-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/8-4-1","title":"الأثر المادي ونصـيب الفرد من الأثر المادي ونصـيب الناتج المحلي الإجمالي من الأثر المادي","content":"\n","id":"8.4.1"},"/sdg-lucy-site/ar/17-3-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/17-3-2","title":"حجم التحويلات المالية (بدولارات الولايات المتحدة) كنسبة من مجموع الناتج المحلي الإجمال","content":"\n","id":"17.3.2"},"/sdg-lucy-site/ar/1-a-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/1-a-1","title":"نسبة الموارد المولدة محليا التي تخصصها الحكومة مباشرة لبرامج الحد من الفقر","content":"\n","id":"1.a.1"},"/sdg-lucy-site/ar/16-7-2":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/16-7-2","title":"نسـبة السكان الذين يعتقدون أن صنع القرار عملية شاملة للجميع وملبية للاحتياجات، بحسب الجنس والعمر والإعاقة والفئة السكانية","content":"\n","id":"16.7.2"},"/sdg-lucy-site/ar/10-4-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/10-4-1","title":"حصة العمل في الناتج المحلي الإجمالي، بما في ذلك الأجور ومدفوعات الحماية الاجتماعية","content":"\n","id":"10.4.1"},"/sdg-lucy-site/ar/4-6-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/4-6-1","title":"نسـبة السـكان في فئة عمرية معينة الذين يحققون على الأقل مسـتوى ثابتا من الكفاءة في المهارات الوظيفية المتصـلة بما يلي: (أ) الأمية و (ب) الحساب، بحسب الجنس","content":"\n","id":"4.6.1"},"/sdg-lucy-site/ar/3-9-3":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/3-9-3","title":"معدل الوفيات المنسوب إلى التسمم غير المتعمد","content":"\n","id":"3.9.3"},"/sdg-lucy-site/ar/15-2-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/15-2-1","title":" التقدم المحرز في إرساء الإدارة المستدامة للغابات","content":"\n","id":"15.2.1"},"/sdg-lucy-site/ar/16-9-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/16-9-1","title":"نسبة الأطفال دون سن الخامسة الذين سُجلت ولاداتهم في قيد السجل المدني، بحسب العمر","content":"\n","id":"16.9.1"},"/sdg-lucy-site/ar/3-7-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/3-7-1","title":"نسبة النساء اللاتي في سن الإنجاب (49-15 سنة) واللاتي لُبّيت حاجتُهن إالى تنظيم الأسرة بطرق حديثة ","content":"\n","id":"3.7.1"},"/sdg-lucy-site/ar/6-4-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/6-4-1","title":"التغير في كفاءة استخدام المياه على مدى فترة من الزمن ","content":"\n","id":"6.4.1"},"/sdg-lucy-site/ar/15-3-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/15-3-1","title":"نسبة الأراضي المتدهورة إلى مجموع مساحة اليابسة","content":"\n","id":"15.3.1"},"/sdg-lucy-site/ar/17-9-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/17-9-1","title":"القيمة الدولارية للمساعدة المالية والتقنية (بوسائل تشمل التعاون بين الشمال والجنوب وفي ما بين بلدان الجنوب والتعاون الثلاثي) المرصودة للبلدان النامية","content":"\n","id":"17.9.1"},"/sdg-lucy-site/ar/1-2-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/1-2-1","title":"نسبة السكان الذين يعيشون دون خط الفقر الوطني، بحسب الجنس والعمر ","content":"\n","id":"1.2.1"},"/sdg-lucy-site/ar/15-6-1":{"type":"مؤشرات","url":"/sdg-lucy-site/ar/15-6-1","title":"عدد البلدان التي اعتمدت أطرا تشريعية وإدارية وسياساتية لكفالة تقاسم المنافع على نحو عادل ومنصف","content":"\n","id":"15.6.1"},"/sdg-lucy-site/ar/1":{"type":"اهداف","url":"/sdg-lucy-site/ar/1","title":"القضاء على الفقر بجميع أشكاله في كل مكان","content":"","id":"1"},"/sdg-lucy-site/ar/2":{"type":"اهداف","url":"/sdg-lucy-site/ar/2","title":"القضاء على الجوع وتحقيق الأمن الغذائي وتحسين التغذية وتعزيز الزراعة المستدامة ","content":"","id":"2"},"/sdg-lucy-site/ar/3":{"type":"اهداف","url":"/sdg-lucy-site/ar/3","title":"ضمان حياة صحية وتعزيز الرفاهية للجميع في جميع الأعمار","content":"","id":"3"},"/sdg-lucy-site/ar/4":{"type":"اهداف","url":"/sdg-lucy-site/ar/4","title":"ضمان التعليم الجيد الشامل والمنصف وتعزيز فرص التعلم مدى الحياة للجميع","content":"","id":"4"},"/sdg-lucy-site/ar/5":{"type":"اهداف","url":"/sdg-lucy-site/ar/5","title":"تحقيق المساواة بين الجنسين وتمكين جميع النساء والفتيات ","content":"","id":"5"},"/sdg-lucy-site/ar/6":{"type":"اهداف","url":"/sdg-lucy-site/ar/6","title":"ضمان التوافر والإدارة المستدامة للمياه والصرف الصحي للجميع","content":"","id":"6"},"/sdg-lucy-site/ar/7":{"type":"اهداف","url":"/sdg-lucy-site/ar/7","title":"ضمان الوصول إالى الطاقة الحديثة والموثوقة والمستدامة والحديثة للجميع","content":"","id":"7"},"/sdg-lucy-site/ar/8":{"type":"اهداف","url":"/sdg-lucy-site/ar/8","title":"تعزيز النمو الاقتصادي المستدام والشامل والعمالة الكاملة والمنتجة والعمل اللائق للجميع ","content":"","id":"8"},"/sdg-lucy-site/ar/9":{"type":"اهداف","url":"/sdg-lucy-site/ar/9","title":"بناء هياكل أساسية مرنة، وتعزيز التصنيع الشامل والمستدام وتعزيز الابتكار","content":"","id":"9"},"/sdg-lucy-site/ar/10":{"type":"اهداف","url":"/sdg-lucy-site/ar/10","title":"انخفاض عدم المساواة داخل وبين البلدان","content":"","id":"10"},"/sdg-lucy-site/ar/11":{"type":"اهداف","url":"/sdg-lucy-site/ar/11","title":"جعل المدن والمستوطنات البشرية شاملة وآمنة ومرنة ومستدامة","content":"","id":"11"},"/sdg-lucy-site/ar/12":{"type":"اهداف","url":"/sdg-lucy-site/ar/12","title":"ضمان أنماط الاستهلاك والإنتاج المستدامة","content":"","id":"12"},"/sdg-lucy-site/ar/13":{"type":"اهداف","url":"/sdg-lucy-site/ar/13","title":"اتخاذ إجراءات عاجلة لمكافحة تغير المناخ وآثاره","content":"","id":"13"},"/sdg-lucy-site/ar/14":{"type":"اهداف","url":"/sdg-lucy-site/ar/14","title":"حفظ المحيطات والبحار والموارد البحرية واستخدامها على نحو مستدام لتحقيق التنمية المستدامة","content":"","id":"14"},"/sdg-lucy-site/ar/15":{"type":"اهداف","url":"/sdg-lucy-site/ar/15","title":"حماية وترميم وتشجيع الاستخدام المستدام للنظم الإيكولوجية الأرضية، وإدارة الغابات على نحو مستدام، وكافحة التصحر، ووقف تدهور الأراضي وعكس مساره ووقف فقدان التنوع البيولوجي","content":"","id":"15"},"/sdg-lucy-site/ar/16":{"type":"اهداف","url":"/sdg-lucy-site/ar/16","title":"تعزيز المجتمعات السلمية والشاملة لتحقيق التنمية المستدامة، وتوفير إمكانية الوصول إالى العدالة للجميع وبناء مؤسسات فعالة وخاضعة للمساءلة وشاملة للجميع على جميع المستويات","content":"","id":"16"},"/sdg-lucy-site/ar/17":{"type":"اهداف","url":"/sdg-lucy-site/ar/17","title":"تعزيز وسائل التنفيذ وتنشيط الشراكة العالمية من أجل التنمية المستدامة","content":"","id":"17"}};
+
+opensdg.searchIndexBoost = [{
+  field: 'title',
+  boost: 10,
+}];
+
+
+opensdg.searchIndexExtraFields = [];
+
+</script>
+
+<div id="main-content" class="container" role="main">
+  <h1>نتائج البحث عن '<span id="search-term"></span>'</h1>
+  <form>
+    <input id="search-bar-on-page" type="text" name="q">
+    <input type="submit" value="بحث">
+  </form>
+  <div class="loader">
+  <img src="/sdg-lucy-site/assets/img/loading.gif" alt="تحميل نتائج البحث" />
+</div>
+
+  <div id="search-results" class="results"></div>
+</div>
+
+<script src="https://unpkg.com/lunr/lunr.min.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/lunr-languages@1.4.0/lunr.stemmer.support.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lunr-languages@1.4.0/lunr.ar.js"></script>
+
+<footer role="contentinfo">
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12">
+        <div id="footerLinks">
+          <ul>
+            <li><a href="https://open-sdg.org">بنيت باستخدام Open SDG</a></li>
+            
+              <li>
+                
+                  <a href="mailto:my-email-address@example.com" target="_blank">اتصل بنا</a>
+                
+                </li>
+              <li>
+                
+                  <a href="https://twitter.com/MyTwitterAccount" target="_blank">تويتر</a>
+                
+                </li>
+              <li>
+                
+                  <a href="https://facebook.com/MyFacebookAccount" target="_blank">فيسبوك</a>
+                
+                </li>
+              <li>
+                <a href="/sdg-lucy-site/ar/about/cookies-and-privacy/">ملفات تعريف الارتباط</a>
+                
+                </li>
+              
+            </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Digital Analytics Program roll-up, see https://analytics.usa.gov for data -->
+<!-- <script id="_fed_an_ua_tag" src="https://dap.digitalgov.gov/Universal-Federated-Analytics-Min.js?agency=GSA"></script> -->
+<!-- Google Analytics -->
+
+<!-- /.container </div> -->
+<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script src="//cdn.datatables.net/1.10.16/js/dataTables.bootstrap.min.js"></script>
+<script src="//cdn.datatables.net/fixedcolumns/3.2.3/js/dataTables.fixedColumns.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/patternomaly@1.3.2/dist/patternomaly.js"></script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/autotrack/2.4.1/autotrack.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.0.0-rc.3/dist/html2canvas.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.2/dist/FileSaver.min.js"></script>
+<script>translations['general'] = translations['general'] || {};
+    translations['general']['hide'] = 'إخفاء';</script>
+
+<script>translations['search'] = translations['search'] || {};
+    translations['search']['search'] = 'بحث';</script>
+
+<script src='/sdg-lucy-site/assets/js/sdg.js?v=20201130195908'></script>
+
+<script>
+$(function() {
+    if($('#indicatorData').length) {
+      var domData = $('#indicatorData').data();
+
+      if (domData.showdata) {
+
+        $('.async-loading').each(function(i, obj) {
+            $(obj).append($('<img />').attr('src', $(obj).data('img')).attr('alt', translations.indicator.loading));
+        });
+
+        var remoteUrl = '/comb/' + domData.id + '.json';
+        if (opensdg.remoteDataBaseUrl !== '/') {
+          remoteUrl = opensdg.remoteDataBaseUrl + remoteUrl;
+        }
+
+        $.ajax({
+          url: remoteUrl,
+          success: function(res) {
+
+            $('.async-loading').remove();
+            $('.async-loaded').show();
+
+            var model = new indicatorModel({
+              data: res.data,
+              edgesData: res.edges,
+              showMap: domData.showmap,
+              country: domData.country,
+              indicatorId: domData.indicatorid,
+              shortIndicatorId: domData.id,
+              chartTitle: domData.charttitle,
+              chartTitles: domData.charttitles,
+              measurementUnit: domData.measurementunit,
+              showData: domData.showdata,
+              graphType: domData.graphtype,
+              startValues: domData.startvalues,
+              graphLimits: domData.graphlimits,
+              stackedDisaggregation: domData.stackeddisaggregation,
+              graphAnnotations: domData.graphannotations,
+              indicatorDownloads: domData.indicatordownloads,
+            }),
+            view  = new indicatorView(model, {
+              rootElement: '#indicatorData',
+              legendElement: '#plotLegend',
+              maxChartHeight: 420,
+              tableColumnDefs: [
+                { maxCharCount: 25 }, // nowrap
+                { maxCharCount: 35, width: 200 },
+                { maxCharCount: Infinity, width: 250 }
+              ]
+            }),
+            controller = new indicatorController(model, view);
+            controller.initialise();
+          }
+        });
+      }
+    }
+
+    var switcher = new accessibilitySwitcher();
+
+
+});
+</script>
+
+
+
+
+</body>
+</html>
+
