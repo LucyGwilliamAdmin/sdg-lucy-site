@@ -121,7 +121,7 @@ var translations = {
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" crossorigin="">
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" crossorigin="">
         <link rel="stylesheet" href="https://cdn.datatables.net/fixedcolumns/3.2.3/css/fixedColumns.dataTables.min.css" crossorigin="">
-        <link rel="stylesheet" href="/sdg-lucy-site/assets/css/style.css?v=20201201010316">
+        <link rel="stylesheet" href="/sdg-lucy-site/assets/css/style.css?v=20201202010234">
         <link href="https://fonts.googleapis.com/css?family=Open+Sans|Roboto" rel="stylesheet" crossorigin="">
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css"
           integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
@@ -303,7 +303,13 @@ var translations = {
 
 
 
-<div id="main-content" class="container reportingstatus">
+
+
+
+
+
+
+<div id="main-content" class="container reportingstatus" role="main">
 
   <h1>
   
@@ -312,22 +318,27 @@ var translations = {
 </h1>
 
 
-<div class="goal goal-overall">
-      <div class="details">
+
+
+  
+
+  
+  <div class="goal goal-overall">
+    <div class="details">
         <h2 class="status-goal">
             وضع الاعلان العام <span class="total"><span>244</span> مؤشرات</span>
         </h2>
         <div class="summary">
-          <div class="statuses"><div>
-              <span class="status complete">1</span><strong>اعلن على الانترنت</strong><span class="value">0%</span>
+            <div class="statuses"><div>
+                <span class="status complete"><span class="status-inner">1</span></span><strong>اعلن على الانترنت</strong><span class="value">0%</span>
             </div><div>
-              <span class="status inprogress">0</span><strong>الاحصائيات دائرة</strong><span class="value">0%</span>
+                <span class="status inprogress"><span class="status-inner">0</span></span><strong>الاحصائيات دائرة</strong><span class="value">0%</span>
             </div><div>
-              <span class="status notstarted">243</span><strong>استكشاف مصادر البيانات</strong><span class="value">100%</span>
+                <span class="status notstarted"><span class="status-inner">243</span></span><strong>استكشاف مصادر البيانات</strong><span class="value">100%</span>
             </div><div>
-              <span class="status notapplicable">0</span><strong>لايمكن تطبيقه</strong><span class="value">0%</span>
+                <span class="status notapplicable"><span class="status-inner">0</span></span><strong>لايمكن تطبيقه</strong><span class="value">0%</span>
             </div><br style="clear:both;">
-          </div>
+            </div>
         </div>
         <div class="goal-stats">
             
@@ -342,696 +353,680 @@ var translations = {
             
             
             <span class="notapplicable" style="width:0.0%" title="لايمكن تطبيقه: 0%"></span></div>
-
-      </div>
+    </div>
     <br style="clear:both;">
-  </div>
-
-  
-  <h2>الحالة حسب الهدف</h2>
-  
-
-  <div class="goal reporting-status-item">
-        <div class="frame goal-tiles">
-          <a href="/sdg-lucy-site/ar/1">
-            <img src="https://open-sdg.org/sdg-translations/assets/img/goals/ar/1.png" alt="لا فقر - هدف 1" width="100" height="100" id="goal-1"/>
-          </a>
-        </div>
-        <div class="details">
-          <h3 class="status-goal">
+</div>
+  <h2>الحالة حسب الهدف</h2><div class="goal reporting-status-item">
+    <div class="frame goal-tiles">
+        <a href="/sdg-lucy-site/ar/1">
+        <img src="https://open-sdg.org/sdg-translations/assets/img/goals/ar/1.png" alt="لا فقر - هدف 1" width="100" height="100" class="goal-icon-1"/>
+        </a>
+    </div>
+    <div class="details">
+        <h3 class="status-goal">
             <a href="/sdg-lucy-site/ar/1">لا فقر</a>
             <span class="total">14 مؤشرات</span>
-          </h3>
-          <div class="summary">
+        </h3>
+        <div class="summary">
             <div class="statuses"><div>
-                <span class="status complete">1</span><strong>اعلن على الانترنت</strong><span class="value">7%</span>
-              </div><div>
-                <span class="status inprogress">0</span><strong>الاحصائيات دائرة</strong><span class="value">0%</span>
-              </div><div>
-                <span class="status notstarted">13</span><strong>استكشاف مصادر البيانات</strong><span class="value">93%</span>
-              </div><div>
-                <span class="status notapplicable">0</span><strong>لايمكن تطبيقه</strong><span class="value">0%</span>
-              </div><br style="clear:both;">
+                    <span class="status complete"><span class="status-inner">1</span></span><strong>اعلن على الانترنت</strong><span class="value">7%</span>
+                </div><div>
+                    <span class="status inprogress"><span class="status-inner">0</span></span><strong>الاحصائيات دائرة</strong><span class="value">0%</span>
+                </div><div>
+                    <span class="status notstarted"><span class="status-inner">13</span></span><strong>استكشاف مصادر البيانات</strong><span class="value">93%</span>
+                </div><div>
+                    <span class="status notapplicable"><span class="status-inner">0</span></span><strong>لايمكن تطبيقه</strong><span class="value">0%</span>
+                </div><br style="clear:both;">
             </div>
-          </div>
-          <div class="goal-stats">
-          
-          
-            <span class="complete" style="width:7.142857142857142%" title="اعلن على الانترنت: 7%"></span>
-          
-          
-            <span class="inprogress" style="width:0.0%" title="الاحصائيات دائرة: 0%"></span>
-          
-          
-            <span class="notstarted" style="width:92.85714285714286%" title="استكشاف مصادر البيانات: 93%"></span>
-          
-          
-            <span class="notapplicable" style="width:0.0%" title="لايمكن تطبيقه: 0%"></span></div>
-          <div class="divider">
-          </div>
         </div>
-      <br style="clear:both;">
-    </div><div class="goal reporting-status-item">
-        <div class="frame goal-tiles">
-          <a href="/sdg-lucy-site/ar/2">
-            <img src="https://open-sdg.org/sdg-translations/assets/img/goals/ar/2.png" alt="القضاء على الجوع - هدف 2" width="100" height="100" id="goal-2"/>
-          </a>
-        </div>
-        <div class="details">
-          <h3 class="status-goal">
+        <div class="goal-stats">
+                
+                
+                <span class="complete" style="width:7.142857142857142%" title="اعلن على الانترنت: 7%"></span>
+                
+                
+                <span class="inprogress" style="width:0.0%" title="الاحصائيات دائرة: 0%"></span>
+                
+                
+                <span class="notstarted" style="width:92.85714285714286%" title="استكشاف مصادر البيانات: 93%"></span>
+                
+                
+                <span class="notapplicable" style="width:0.0%" title="لايمكن تطبيقه: 0%"></span></div>
+        <div class="divider"></div>
+    </div>
+    <br style="clear:both;">
+</div><div class="goal reporting-status-item">
+    <div class="frame goal-tiles">
+        <a href="/sdg-lucy-site/ar/2">
+        <img src="https://open-sdg.org/sdg-translations/assets/img/goals/ar/2.png" alt="القضاء على الجوع - هدف 2" width="100" height="100" class="goal-icon-2"/>
+        </a>
+    </div>
+    <div class="details">
+        <h3 class="status-goal">
             <a href="/sdg-lucy-site/ar/2">القضاء على الجوع</a>
             <span class="total">13 مؤشرات</span>
-          </h3>
-          <div class="summary">
+        </h3>
+        <div class="summary">
             <div class="statuses"><div>
-                <span class="status complete">0</span><strong>اعلن على الانترنت</strong><span class="value">0%</span>
-              </div><div>
-                <span class="status inprogress">0</span><strong>الاحصائيات دائرة</strong><span class="value">0%</span>
-              </div><div>
-                <span class="status notstarted">13</span><strong>استكشاف مصادر البيانات</strong><span class="value">100%</span>
-              </div><div>
-                <span class="status notapplicable">0</span><strong>لايمكن تطبيقه</strong><span class="value">0%</span>
-              </div><br style="clear:both;">
+                    <span class="status complete"><span class="status-inner">0</span></span><strong>اعلن على الانترنت</strong><span class="value">0%</span>
+                </div><div>
+                    <span class="status inprogress"><span class="status-inner">0</span></span><strong>الاحصائيات دائرة</strong><span class="value">0%</span>
+                </div><div>
+                    <span class="status notstarted"><span class="status-inner">13</span></span><strong>استكشاف مصادر البيانات</strong><span class="value">100%</span>
+                </div><div>
+                    <span class="status notapplicable"><span class="status-inner">0</span></span><strong>لايمكن تطبيقه</strong><span class="value">0%</span>
+                </div><br style="clear:both;">
             </div>
-          </div>
-          <div class="goal-stats">
-          
-          
-            <span class="complete" style="width:0.0%" title="اعلن على الانترنت: 0%"></span>
-          
-          
-            <span class="inprogress" style="width:0.0%" title="الاحصائيات دائرة: 0%"></span>
-          
-          
-            <span class="notstarted" style="width:100.0%" title="استكشاف مصادر البيانات: 100%"></span>
-          
-          
-            <span class="notapplicable" style="width:0.0%" title="لايمكن تطبيقه: 0%"></span></div>
-          <div class="divider">
-          </div>
         </div>
-      <br style="clear:both;">
-    </div><div class="goal reporting-status-item">
-        <div class="frame goal-tiles">
-          <a href="/sdg-lucy-site/ar/3">
-            <img src="https://open-sdg.org/sdg-translations/assets/img/goals/ar/3.png" alt="صحة جيدة ورفاه - هدف 3" width="100" height="100" id="goal-3"/>
-          </a>
-        </div>
-        <div class="details">
-          <h3 class="status-goal">
+        <div class="goal-stats">
+                
+                
+                <span class="complete" style="width:0.0%" title="اعلن على الانترنت: 0%"></span>
+                
+                
+                <span class="inprogress" style="width:0.0%" title="الاحصائيات دائرة: 0%"></span>
+                
+                
+                <span class="notstarted" style="width:100.0%" title="استكشاف مصادر البيانات: 100%"></span>
+                
+                
+                <span class="notapplicable" style="width:0.0%" title="لايمكن تطبيقه: 0%"></span></div>
+        <div class="divider"></div>
+    </div>
+    <br style="clear:both;">
+</div><div class="goal reporting-status-item">
+    <div class="frame goal-tiles">
+        <a href="/sdg-lucy-site/ar/3">
+        <img src="https://open-sdg.org/sdg-translations/assets/img/goals/ar/3.png" alt="صحة جيدة ورفاه - هدف 3" width="100" height="100" class="goal-icon-3"/>
+        </a>
+    </div>
+    <div class="details">
+        <h3 class="status-goal">
             <a href="/sdg-lucy-site/ar/3">صحة جيدة ورفاه</a>
             <span class="total">27 مؤشرات</span>
-          </h3>
-          <div class="summary">
+        </h3>
+        <div class="summary">
             <div class="statuses"><div>
-                <span class="status complete">0</span><strong>اعلن على الانترنت</strong><span class="value">0%</span>
-              </div><div>
-                <span class="status inprogress">0</span><strong>الاحصائيات دائرة</strong><span class="value">0%</span>
-              </div><div>
-                <span class="status notstarted">27</span><strong>استكشاف مصادر البيانات</strong><span class="value">100%</span>
-              </div><div>
-                <span class="status notapplicable">0</span><strong>لايمكن تطبيقه</strong><span class="value">0%</span>
-              </div><br style="clear:both;">
+                    <span class="status complete"><span class="status-inner">0</span></span><strong>اعلن على الانترنت</strong><span class="value">0%</span>
+                </div><div>
+                    <span class="status inprogress"><span class="status-inner">0</span></span><strong>الاحصائيات دائرة</strong><span class="value">0%</span>
+                </div><div>
+                    <span class="status notstarted"><span class="status-inner">27</span></span><strong>استكشاف مصادر البيانات</strong><span class="value">100%</span>
+                </div><div>
+                    <span class="status notapplicable"><span class="status-inner">0</span></span><strong>لايمكن تطبيقه</strong><span class="value">0%</span>
+                </div><br style="clear:both;">
             </div>
-          </div>
-          <div class="goal-stats">
-          
-          
-            <span class="complete" style="width:0.0%" title="اعلن على الانترنت: 0%"></span>
-          
-          
-            <span class="inprogress" style="width:0.0%" title="الاحصائيات دائرة: 0%"></span>
-          
-          
-            <span class="notstarted" style="width:100.0%" title="استكشاف مصادر البيانات: 100%"></span>
-          
-          
-            <span class="notapplicable" style="width:0.0%" title="لايمكن تطبيقه: 0%"></span></div>
-          <div class="divider">
-          </div>
         </div>
-      <br style="clear:both;">
-    </div><div class="goal reporting-status-item">
-        <div class="frame goal-tiles">
-          <a href="/sdg-lucy-site/ar/4">
-            <img src="https://open-sdg.org/sdg-translations/assets/img/goals/ar/4.png" alt="تعليم ذو جودة - هدف 4" width="100" height="100" id="goal-4"/>
-          </a>
-        </div>
-        <div class="details">
-          <h3 class="status-goal">
+        <div class="goal-stats">
+                
+                
+                <span class="complete" style="width:0.0%" title="اعلن على الانترنت: 0%"></span>
+                
+                
+                <span class="inprogress" style="width:0.0%" title="الاحصائيات دائرة: 0%"></span>
+                
+                
+                <span class="notstarted" style="width:100.0%" title="استكشاف مصادر البيانات: 100%"></span>
+                
+                
+                <span class="notapplicable" style="width:0.0%" title="لايمكن تطبيقه: 0%"></span></div>
+        <div class="divider"></div>
+    </div>
+    <br style="clear:both;">
+</div><div class="goal reporting-status-item">
+    <div class="frame goal-tiles">
+        <a href="/sdg-lucy-site/ar/4">
+        <img src="https://open-sdg.org/sdg-translations/assets/img/goals/ar/4.png" alt="تعليم ذو جودة - هدف 4" width="100" height="100" class="goal-icon-4"/>
+        </a>
+    </div>
+    <div class="details">
+        <h3 class="status-goal">
             <a href="/sdg-lucy-site/ar/4">تعليم ذو جودة</a>
             <span class="total">11 مؤشرات</span>
-          </h3>
-          <div class="summary">
+        </h3>
+        <div class="summary">
             <div class="statuses"><div>
-                <span class="status complete">0</span><strong>اعلن على الانترنت</strong><span class="value">0%</span>
-              </div><div>
-                <span class="status inprogress">0</span><strong>الاحصائيات دائرة</strong><span class="value">0%</span>
-              </div><div>
-                <span class="status notstarted">11</span><strong>استكشاف مصادر البيانات</strong><span class="value">100%</span>
-              </div><div>
-                <span class="status notapplicable">0</span><strong>لايمكن تطبيقه</strong><span class="value">0%</span>
-              </div><br style="clear:both;">
+                    <span class="status complete"><span class="status-inner">0</span></span><strong>اعلن على الانترنت</strong><span class="value">0%</span>
+                </div><div>
+                    <span class="status inprogress"><span class="status-inner">0</span></span><strong>الاحصائيات دائرة</strong><span class="value">0%</span>
+                </div><div>
+                    <span class="status notstarted"><span class="status-inner">11</span></span><strong>استكشاف مصادر البيانات</strong><span class="value">100%</span>
+                </div><div>
+                    <span class="status notapplicable"><span class="status-inner">0</span></span><strong>لايمكن تطبيقه</strong><span class="value">0%</span>
+                </div><br style="clear:both;">
             </div>
-          </div>
-          <div class="goal-stats">
-          
-          
-            <span class="complete" style="width:0.0%" title="اعلن على الانترنت: 0%"></span>
-          
-          
-            <span class="inprogress" style="width:0.0%" title="الاحصائيات دائرة: 0%"></span>
-          
-          
-            <span class="notstarted" style="width:100.0%" title="استكشاف مصادر البيانات: 100%"></span>
-          
-          
-            <span class="notapplicable" style="width:0.0%" title="لايمكن تطبيقه: 0%"></span></div>
-          <div class="divider">
-          </div>
         </div>
-      <br style="clear:both;">
-    </div><div class="goal reporting-status-item">
-        <div class="frame goal-tiles">
-          <a href="/sdg-lucy-site/ar/5">
-            <img src="https://open-sdg.org/sdg-translations/assets/img/goals/ar/5.png" alt="المساواة بين الجنسين - هدف 5" width="100" height="100" id="goal-5"/>
-          </a>
-        </div>
-        <div class="details">
-          <h3 class="status-goal">
+        <div class="goal-stats">
+                
+                
+                <span class="complete" style="width:0.0%" title="اعلن على الانترنت: 0%"></span>
+                
+                
+                <span class="inprogress" style="width:0.0%" title="الاحصائيات دائرة: 0%"></span>
+                
+                
+                <span class="notstarted" style="width:100.0%" title="استكشاف مصادر البيانات: 100%"></span>
+                
+                
+                <span class="notapplicable" style="width:0.0%" title="لايمكن تطبيقه: 0%"></span></div>
+        <div class="divider"></div>
+    </div>
+    <br style="clear:both;">
+</div><div class="goal reporting-status-item">
+    <div class="frame goal-tiles">
+        <a href="/sdg-lucy-site/ar/5">
+        <img src="https://open-sdg.org/sdg-translations/assets/img/goals/ar/5.png" alt="المساواة بين الجنسين - هدف 5" width="100" height="100" class="goal-icon-5"/>
+        </a>
+    </div>
+    <div class="details">
+        <h3 class="status-goal">
             <a href="/sdg-lucy-site/ar/5">المساواة بين الجنسين</a>
             <span class="total">14 مؤشرات</span>
-          </h3>
-          <div class="summary">
+        </h3>
+        <div class="summary">
             <div class="statuses"><div>
-                <span class="status complete">0</span><strong>اعلن على الانترنت</strong><span class="value">0%</span>
-              </div><div>
-                <span class="status inprogress">0</span><strong>الاحصائيات دائرة</strong><span class="value">0%</span>
-              </div><div>
-                <span class="status notstarted">14</span><strong>استكشاف مصادر البيانات</strong><span class="value">100%</span>
-              </div><div>
-                <span class="status notapplicable">0</span><strong>لايمكن تطبيقه</strong><span class="value">0%</span>
-              </div><br style="clear:both;">
+                    <span class="status complete"><span class="status-inner">0</span></span><strong>اعلن على الانترنت</strong><span class="value">0%</span>
+                </div><div>
+                    <span class="status inprogress"><span class="status-inner">0</span></span><strong>الاحصائيات دائرة</strong><span class="value">0%</span>
+                </div><div>
+                    <span class="status notstarted"><span class="status-inner">14</span></span><strong>استكشاف مصادر البيانات</strong><span class="value">100%</span>
+                </div><div>
+                    <span class="status notapplicable"><span class="status-inner">0</span></span><strong>لايمكن تطبيقه</strong><span class="value">0%</span>
+                </div><br style="clear:both;">
             </div>
-          </div>
-          <div class="goal-stats">
-          
-          
-            <span class="complete" style="width:0.0%" title="اعلن على الانترنت: 0%"></span>
-          
-          
-            <span class="inprogress" style="width:0.0%" title="الاحصائيات دائرة: 0%"></span>
-          
-          
-            <span class="notstarted" style="width:100.0%" title="استكشاف مصادر البيانات: 100%"></span>
-          
-          
-            <span class="notapplicable" style="width:0.0%" title="لايمكن تطبيقه: 0%"></span></div>
-          <div class="divider">
-          </div>
         </div>
-      <br style="clear:both;">
-    </div><div class="goal reporting-status-item">
-        <div class="frame goal-tiles">
-          <a href="/sdg-lucy-site/ar/6">
-            <img src="https://open-sdg.org/sdg-translations/assets/img/goals/ar/6.png" alt="المياه النظيفة والصرف الصحي - هدف 6" width="100" height="100" id="goal-6"/>
-          </a>
-        </div>
-        <div class="details">
-          <h3 class="status-goal">
+        <div class="goal-stats">
+                
+                
+                <span class="complete" style="width:0.0%" title="اعلن على الانترنت: 0%"></span>
+                
+                
+                <span class="inprogress" style="width:0.0%" title="الاحصائيات دائرة: 0%"></span>
+                
+                
+                <span class="notstarted" style="width:100.0%" title="استكشاف مصادر البيانات: 100%"></span>
+                
+                
+                <span class="notapplicable" style="width:0.0%" title="لايمكن تطبيقه: 0%"></span></div>
+        <div class="divider"></div>
+    </div>
+    <br style="clear:both;">
+</div><div class="goal reporting-status-item">
+    <div class="frame goal-tiles">
+        <a href="/sdg-lucy-site/ar/6">
+        <img src="https://open-sdg.org/sdg-translations/assets/img/goals/ar/6.png" alt="المياه النظيفة والصرف الصحي - هدف 6" width="100" height="100" class="goal-icon-6"/>
+        </a>
+    </div>
+    <div class="details">
+        <h3 class="status-goal">
             <a href="/sdg-lucy-site/ar/6">المياه النظيفة والصرف الصحي</a>
             <span class="total">11 مؤشرات</span>
-          </h3>
-          <div class="summary">
+        </h3>
+        <div class="summary">
             <div class="statuses"><div>
-                <span class="status complete">0</span><strong>اعلن على الانترنت</strong><span class="value">0%</span>
-              </div><div>
-                <span class="status inprogress">0</span><strong>الاحصائيات دائرة</strong><span class="value">0%</span>
-              </div><div>
-                <span class="status notstarted">11</span><strong>استكشاف مصادر البيانات</strong><span class="value">100%</span>
-              </div><div>
-                <span class="status notapplicable">0</span><strong>لايمكن تطبيقه</strong><span class="value">0%</span>
-              </div><br style="clear:both;">
+                    <span class="status complete"><span class="status-inner">0</span></span><strong>اعلن على الانترنت</strong><span class="value">0%</span>
+                </div><div>
+                    <span class="status inprogress"><span class="status-inner">0</span></span><strong>الاحصائيات دائرة</strong><span class="value">0%</span>
+                </div><div>
+                    <span class="status notstarted"><span class="status-inner">11</span></span><strong>استكشاف مصادر البيانات</strong><span class="value">100%</span>
+                </div><div>
+                    <span class="status notapplicable"><span class="status-inner">0</span></span><strong>لايمكن تطبيقه</strong><span class="value">0%</span>
+                </div><br style="clear:both;">
             </div>
-          </div>
-          <div class="goal-stats">
-          
-          
-            <span class="complete" style="width:0.0%" title="اعلن على الانترنت: 0%"></span>
-          
-          
-            <span class="inprogress" style="width:0.0%" title="الاحصائيات دائرة: 0%"></span>
-          
-          
-            <span class="notstarted" style="width:100.0%" title="استكشاف مصادر البيانات: 100%"></span>
-          
-          
-            <span class="notapplicable" style="width:0.0%" title="لايمكن تطبيقه: 0%"></span></div>
-          <div class="divider">
-          </div>
         </div>
-      <br style="clear:both;">
-    </div><div class="goal reporting-status-item">
-        <div class="frame goal-tiles">
-          <a href="/sdg-lucy-site/ar/7">
-            <img src="https://open-sdg.org/sdg-translations/assets/img/goals/ar/7.png" alt="الطاقة النظيفة والمتوفرة بأسعار معقولة  - هدف 7" width="100" height="100" id="goal-7"/>
-          </a>
-        </div>
-        <div class="details">
-          <h3 class="status-goal">
+        <div class="goal-stats">
+                
+                
+                <span class="complete" style="width:0.0%" title="اعلن على الانترنت: 0%"></span>
+                
+                
+                <span class="inprogress" style="width:0.0%" title="الاحصائيات دائرة: 0%"></span>
+                
+                
+                <span class="notstarted" style="width:100.0%" title="استكشاف مصادر البيانات: 100%"></span>
+                
+                
+                <span class="notapplicable" style="width:0.0%" title="لايمكن تطبيقه: 0%"></span></div>
+        <div class="divider"></div>
+    </div>
+    <br style="clear:both;">
+</div><div class="goal reporting-status-item">
+    <div class="frame goal-tiles">
+        <a href="/sdg-lucy-site/ar/7">
+        <img src="https://open-sdg.org/sdg-translations/assets/img/goals/ar/7.png" alt="الطاقة النظيفة والمتوفرة بأسعار معقولة  - هدف 7" width="100" height="100" class="goal-icon-7"/>
+        </a>
+    </div>
+    <div class="details">
+        <h3 class="status-goal">
             <a href="/sdg-lucy-site/ar/7">الطاقة النظيفة والمتوفرة بأسعار معقولة </a>
             <span class="total">6 مؤشرات</span>
-          </h3>
-          <div class="summary">
+        </h3>
+        <div class="summary">
             <div class="statuses"><div>
-                <span class="status complete">0</span><strong>اعلن على الانترنت</strong><span class="value">0%</span>
-              </div><div>
-                <span class="status inprogress">0</span><strong>الاحصائيات دائرة</strong><span class="value">0%</span>
-              </div><div>
-                <span class="status notstarted">6</span><strong>استكشاف مصادر البيانات</strong><span class="value">100%</span>
-              </div><div>
-                <span class="status notapplicable">0</span><strong>لايمكن تطبيقه</strong><span class="value">0%</span>
-              </div><br style="clear:both;">
+                    <span class="status complete"><span class="status-inner">0</span></span><strong>اعلن على الانترنت</strong><span class="value">0%</span>
+                </div><div>
+                    <span class="status inprogress"><span class="status-inner">0</span></span><strong>الاحصائيات دائرة</strong><span class="value">0%</span>
+                </div><div>
+                    <span class="status notstarted"><span class="status-inner">6</span></span><strong>استكشاف مصادر البيانات</strong><span class="value">100%</span>
+                </div><div>
+                    <span class="status notapplicable"><span class="status-inner">0</span></span><strong>لايمكن تطبيقه</strong><span class="value">0%</span>
+                </div><br style="clear:both;">
             </div>
-          </div>
-          <div class="goal-stats">
-          
-          
-            <span class="complete" style="width:0.0%" title="اعلن على الانترنت: 0%"></span>
-          
-          
-            <span class="inprogress" style="width:0.0%" title="الاحصائيات دائرة: 0%"></span>
-          
-          
-            <span class="notstarted" style="width:100.0%" title="استكشاف مصادر البيانات: 100%"></span>
-          
-          
-            <span class="notapplicable" style="width:0.0%" title="لايمكن تطبيقه: 0%"></span></div>
-          <div class="divider">
-          </div>
         </div>
-      <br style="clear:both;">
-    </div><div class="goal reporting-status-item">
-        <div class="frame goal-tiles">
-          <a href="/sdg-lucy-site/ar/8">
-            <img src="https://open-sdg.org/sdg-translations/assets/img/goals/ar/8.png" alt="وظائف لائقة والنمو الاقتصادي - هدف 8" width="100" height="100" id="goal-8"/>
-          </a>
-        </div>
-        <div class="details">
-          <h3 class="status-goal">
+        <div class="goal-stats">
+                
+                
+                <span class="complete" style="width:0.0%" title="اعلن على الانترنت: 0%"></span>
+                
+                
+                <span class="inprogress" style="width:0.0%" title="الاحصائيات دائرة: 0%"></span>
+                
+                
+                <span class="notstarted" style="width:100.0%" title="استكشاف مصادر البيانات: 100%"></span>
+                
+                
+                <span class="notapplicable" style="width:0.0%" title="لايمكن تطبيقه: 0%"></span></div>
+        <div class="divider"></div>
+    </div>
+    <br style="clear:both;">
+</div><div class="goal reporting-status-item">
+    <div class="frame goal-tiles">
+        <a href="/sdg-lucy-site/ar/8">
+        <img src="https://open-sdg.org/sdg-translations/assets/img/goals/ar/8.png" alt="وظائف لائقة والنمو الاقتصادي - هدف 8" width="100" height="100" class="goal-icon-8"/>
+        </a>
+    </div>
+    <div class="details">
+        <h3 class="status-goal">
             <a href="/sdg-lucy-site/ar/8">وظائف لائقة والنمو الاقتصادي</a>
             <span class="total">17 مؤشرات</span>
-          </h3>
-          <div class="summary">
+        </h3>
+        <div class="summary">
             <div class="statuses"><div>
-                <span class="status complete">0</span><strong>اعلن على الانترنت</strong><span class="value">0%</span>
-              </div><div>
-                <span class="status inprogress">0</span><strong>الاحصائيات دائرة</strong><span class="value">0%</span>
-              </div><div>
-                <span class="status notstarted">17</span><strong>استكشاف مصادر البيانات</strong><span class="value">100%</span>
-              </div><div>
-                <span class="status notapplicable">0</span><strong>لايمكن تطبيقه</strong><span class="value">0%</span>
-              </div><br style="clear:both;">
+                    <span class="status complete"><span class="status-inner">0</span></span><strong>اعلن على الانترنت</strong><span class="value">0%</span>
+                </div><div>
+                    <span class="status inprogress"><span class="status-inner">0</span></span><strong>الاحصائيات دائرة</strong><span class="value">0%</span>
+                </div><div>
+                    <span class="status notstarted"><span class="status-inner">17</span></span><strong>استكشاف مصادر البيانات</strong><span class="value">100%</span>
+                </div><div>
+                    <span class="status notapplicable"><span class="status-inner">0</span></span><strong>لايمكن تطبيقه</strong><span class="value">0%</span>
+                </div><br style="clear:both;">
             </div>
-          </div>
-          <div class="goal-stats">
-          
-          
-            <span class="complete" style="width:0.0%" title="اعلن على الانترنت: 0%"></span>
-          
-          
-            <span class="inprogress" style="width:0.0%" title="الاحصائيات دائرة: 0%"></span>
-          
-          
-            <span class="notstarted" style="width:100.0%" title="استكشاف مصادر البيانات: 100%"></span>
-          
-          
-            <span class="notapplicable" style="width:0.0%" title="لايمكن تطبيقه: 0%"></span></div>
-          <div class="divider">
-          </div>
         </div>
-      <br style="clear:both;">
-    </div><div class="goal reporting-status-item">
-        <div class="frame goal-tiles">
-          <a href="/sdg-lucy-site/ar/9">
-            <img src="https://open-sdg.org/sdg-translations/assets/img/goals/ar/9.png" alt="الصناعة والابتكار والهياكل الأساسية  - هدف 9" width="100" height="100" id="goal-9"/>
-          </a>
-        </div>
-        <div class="details">
-          <h3 class="status-goal">
+        <div class="goal-stats">
+                
+                
+                <span class="complete" style="width:0.0%" title="اعلن على الانترنت: 0%"></span>
+                
+                
+                <span class="inprogress" style="width:0.0%" title="الاحصائيات دائرة: 0%"></span>
+                
+                
+                <span class="notstarted" style="width:100.0%" title="استكشاف مصادر البيانات: 100%"></span>
+                
+                
+                <span class="notapplicable" style="width:0.0%" title="لايمكن تطبيقه: 0%"></span></div>
+        <div class="divider"></div>
+    </div>
+    <br style="clear:both;">
+</div><div class="goal reporting-status-item">
+    <div class="frame goal-tiles">
+        <a href="/sdg-lucy-site/ar/9">
+        <img src="https://open-sdg.org/sdg-translations/assets/img/goals/ar/9.png" alt="الصناعة والابتكار والهياكل الأساسية  - هدف 9" width="100" height="100" class="goal-icon-9"/>
+        </a>
+    </div>
+    <div class="details">
+        <h3 class="status-goal">
             <a href="/sdg-lucy-site/ar/9">الصناعة والابتكار والهياكل الأساسية </a>
             <span class="total">12 مؤشرات</span>
-          </h3>
-          <div class="summary">
+        </h3>
+        <div class="summary">
             <div class="statuses"><div>
-                <span class="status complete">0</span><strong>اعلن على الانترنت</strong><span class="value">0%</span>
-              </div><div>
-                <span class="status inprogress">0</span><strong>الاحصائيات دائرة</strong><span class="value">0%</span>
-              </div><div>
-                <span class="status notstarted">12</span><strong>استكشاف مصادر البيانات</strong><span class="value">100%</span>
-              </div><div>
-                <span class="status notapplicable">0</span><strong>لايمكن تطبيقه</strong><span class="value">0%</span>
-              </div><br style="clear:both;">
+                    <span class="status complete"><span class="status-inner">0</span></span><strong>اعلن على الانترنت</strong><span class="value">0%</span>
+                </div><div>
+                    <span class="status inprogress"><span class="status-inner">0</span></span><strong>الاحصائيات دائرة</strong><span class="value">0%</span>
+                </div><div>
+                    <span class="status notstarted"><span class="status-inner">12</span></span><strong>استكشاف مصادر البيانات</strong><span class="value">100%</span>
+                </div><div>
+                    <span class="status notapplicable"><span class="status-inner">0</span></span><strong>لايمكن تطبيقه</strong><span class="value">0%</span>
+                </div><br style="clear:both;">
             </div>
-          </div>
-          <div class="goal-stats">
-          
-          
-            <span class="complete" style="width:0.0%" title="اعلن على الانترنت: 0%"></span>
-          
-          
-            <span class="inprogress" style="width:0.0%" title="الاحصائيات دائرة: 0%"></span>
-          
-          
-            <span class="notstarted" style="width:100.0%" title="استكشاف مصادر البيانات: 100%"></span>
-          
-          
-            <span class="notapplicable" style="width:0.0%" title="لايمكن تطبيقه: 0%"></span></div>
-          <div class="divider">
-          </div>
         </div>
-      <br style="clear:both;">
-    </div><div class="goal reporting-status-item">
-        <div class="frame goal-tiles">
-          <a href="/sdg-lucy-site/ar/10">
-            <img src="https://open-sdg.org/sdg-translations/assets/img/goals/ar/10.png" alt="انخفاض عدم المساواة - هدف 10" width="100" height="100" id="goal-10"/>
-          </a>
-        </div>
-        <div class="details">
-          <h3 class="status-goal">
+        <div class="goal-stats">
+                
+                
+                <span class="complete" style="width:0.0%" title="اعلن على الانترنت: 0%"></span>
+                
+                
+                <span class="inprogress" style="width:0.0%" title="الاحصائيات دائرة: 0%"></span>
+                
+                
+                <span class="notstarted" style="width:100.0%" title="استكشاف مصادر البيانات: 100%"></span>
+                
+                
+                <span class="notapplicable" style="width:0.0%" title="لايمكن تطبيقه: 0%"></span></div>
+        <div class="divider"></div>
+    </div>
+    <br style="clear:both;">
+</div><div class="goal reporting-status-item">
+    <div class="frame goal-tiles">
+        <a href="/sdg-lucy-site/ar/10">
+        <img src="https://open-sdg.org/sdg-translations/assets/img/goals/ar/10.png" alt="انخفاض عدم المساواة - هدف 10" width="100" height="100" class="goal-icon-10"/>
+        </a>
+    </div>
+    <div class="details">
+        <h3 class="status-goal">
             <a href="/sdg-lucy-site/ar/10">انخفاض عدم المساواة</a>
             <span class="total">11 مؤشرات</span>
-          </h3>
-          <div class="summary">
+        </h3>
+        <div class="summary">
             <div class="statuses"><div>
-                <span class="status complete">0</span><strong>اعلن على الانترنت</strong><span class="value">0%</span>
-              </div><div>
-                <span class="status inprogress">0</span><strong>الاحصائيات دائرة</strong><span class="value">0%</span>
-              </div><div>
-                <span class="status notstarted">11</span><strong>استكشاف مصادر البيانات</strong><span class="value">100%</span>
-              </div><div>
-                <span class="status notapplicable">0</span><strong>لايمكن تطبيقه</strong><span class="value">0%</span>
-              </div><br style="clear:both;">
+                    <span class="status complete"><span class="status-inner">0</span></span><strong>اعلن على الانترنت</strong><span class="value">0%</span>
+                </div><div>
+                    <span class="status inprogress"><span class="status-inner">0</span></span><strong>الاحصائيات دائرة</strong><span class="value">0%</span>
+                </div><div>
+                    <span class="status notstarted"><span class="status-inner">11</span></span><strong>استكشاف مصادر البيانات</strong><span class="value">100%</span>
+                </div><div>
+                    <span class="status notapplicable"><span class="status-inner">0</span></span><strong>لايمكن تطبيقه</strong><span class="value">0%</span>
+                </div><br style="clear:both;">
             </div>
-          </div>
-          <div class="goal-stats">
-          
-          
-            <span class="complete" style="width:0.0%" title="اعلن على الانترنت: 0%"></span>
-          
-          
-            <span class="inprogress" style="width:0.0%" title="الاحصائيات دائرة: 0%"></span>
-          
-          
-            <span class="notstarted" style="width:100.0%" title="استكشاف مصادر البيانات: 100%"></span>
-          
-          
-            <span class="notapplicable" style="width:0.0%" title="لايمكن تطبيقه: 0%"></span></div>
-          <div class="divider">
-          </div>
         </div>
-      <br style="clear:both;">
-    </div><div class="goal reporting-status-item">
-        <div class="frame goal-tiles">
-          <a href="/sdg-lucy-site/ar/11">
-            <img src="https://open-sdg.org/sdg-translations/assets/img/goals/ar/11.png" alt="المدن والمجتمعات المستدامة - هدف 11" width="100" height="100" id="goal-11"/>
-          </a>
-        </div>
-        <div class="details">
-          <h3 class="status-goal">
+        <div class="goal-stats">
+                
+                
+                <span class="complete" style="width:0.0%" title="اعلن على الانترنت: 0%"></span>
+                
+                
+                <span class="inprogress" style="width:0.0%" title="الاحصائيات دائرة: 0%"></span>
+                
+                
+                <span class="notstarted" style="width:100.0%" title="استكشاف مصادر البيانات: 100%"></span>
+                
+                
+                <span class="notapplicable" style="width:0.0%" title="لايمكن تطبيقه: 0%"></span></div>
+        <div class="divider"></div>
+    </div>
+    <br style="clear:both;">
+</div><div class="goal reporting-status-item">
+    <div class="frame goal-tiles">
+        <a href="/sdg-lucy-site/ar/11">
+        <img src="https://open-sdg.org/sdg-translations/assets/img/goals/ar/11.png" alt="المدن والمجتمعات المستدامة - هدف 11" width="100" height="100" class="goal-icon-11"/>
+        </a>
+    </div>
+    <div class="details">
+        <h3 class="status-goal">
             <a href="/sdg-lucy-site/ar/11">المدن والمجتمعات المستدامة</a>
             <span class="total">15 مؤشرات</span>
-          </h3>
-          <div class="summary">
+        </h3>
+        <div class="summary">
             <div class="statuses"><div>
-                <span class="status complete">0</span><strong>اعلن على الانترنت</strong><span class="value">0%</span>
-              </div><div>
-                <span class="status inprogress">0</span><strong>الاحصائيات دائرة</strong><span class="value">0%</span>
-              </div><div>
-                <span class="status notstarted">15</span><strong>استكشاف مصادر البيانات</strong><span class="value">100%</span>
-              </div><div>
-                <span class="status notapplicable">0</span><strong>لايمكن تطبيقه</strong><span class="value">0%</span>
-              </div><br style="clear:both;">
+                    <span class="status complete"><span class="status-inner">0</span></span><strong>اعلن على الانترنت</strong><span class="value">0%</span>
+                </div><div>
+                    <span class="status inprogress"><span class="status-inner">0</span></span><strong>الاحصائيات دائرة</strong><span class="value">0%</span>
+                </div><div>
+                    <span class="status notstarted"><span class="status-inner">15</span></span><strong>استكشاف مصادر البيانات</strong><span class="value">100%</span>
+                </div><div>
+                    <span class="status notapplicable"><span class="status-inner">0</span></span><strong>لايمكن تطبيقه</strong><span class="value">0%</span>
+                </div><br style="clear:both;">
             </div>
-          </div>
-          <div class="goal-stats">
-          
-          
-            <span class="complete" style="width:0.0%" title="اعلن على الانترنت: 0%"></span>
-          
-          
-            <span class="inprogress" style="width:0.0%" title="الاحصائيات دائرة: 0%"></span>
-          
-          
-            <span class="notstarted" style="width:100.0%" title="استكشاف مصادر البيانات: 100%"></span>
-          
-          
-            <span class="notapplicable" style="width:0.0%" title="لايمكن تطبيقه: 0%"></span></div>
-          <div class="divider">
-          </div>
         </div>
-      <br style="clear:both;">
-    </div><div class="goal reporting-status-item">
-        <div class="frame goal-tiles">
-          <a href="/sdg-lucy-site/ar/12">
-            <img src="https://open-sdg.org/sdg-translations/assets/img/goals/ar/12.png" alt="الاستهلاك والإنتاج المسؤول - هدف 12" width="100" height="100" id="goal-12"/>
-          </a>
-        </div>
-        <div class="details">
-          <h3 class="status-goal">
+        <div class="goal-stats">
+                
+                
+                <span class="complete" style="width:0.0%" title="اعلن على الانترنت: 0%"></span>
+                
+                
+                <span class="inprogress" style="width:0.0%" title="الاحصائيات دائرة: 0%"></span>
+                
+                
+                <span class="notstarted" style="width:100.0%" title="استكشاف مصادر البيانات: 100%"></span>
+                
+                
+                <span class="notapplicable" style="width:0.0%" title="لايمكن تطبيقه: 0%"></span></div>
+        <div class="divider"></div>
+    </div>
+    <br style="clear:both;">
+</div><div class="goal reporting-status-item">
+    <div class="frame goal-tiles">
+        <a href="/sdg-lucy-site/ar/12">
+        <img src="https://open-sdg.org/sdg-translations/assets/img/goals/ar/12.png" alt="الاستهلاك والإنتاج المسؤول - هدف 12" width="100" height="100" class="goal-icon-12"/>
+        </a>
+    </div>
+    <div class="details">
+        <h3 class="status-goal">
             <a href="/sdg-lucy-site/ar/12">الاستهلاك والإنتاج المسؤول</a>
             <span class="total">13 مؤشرات</span>
-          </h3>
-          <div class="summary">
+        </h3>
+        <div class="summary">
             <div class="statuses"><div>
-                <span class="status complete">0</span><strong>اعلن على الانترنت</strong><span class="value">0%</span>
-              </div><div>
-                <span class="status inprogress">0</span><strong>الاحصائيات دائرة</strong><span class="value">0%</span>
-              </div><div>
-                <span class="status notstarted">13</span><strong>استكشاف مصادر البيانات</strong><span class="value">100%</span>
-              </div><div>
-                <span class="status notapplicable">0</span><strong>لايمكن تطبيقه</strong><span class="value">0%</span>
-              </div><br style="clear:both;">
+                    <span class="status complete"><span class="status-inner">0</span></span><strong>اعلن على الانترنت</strong><span class="value">0%</span>
+                </div><div>
+                    <span class="status inprogress"><span class="status-inner">0</span></span><strong>الاحصائيات دائرة</strong><span class="value">0%</span>
+                </div><div>
+                    <span class="status notstarted"><span class="status-inner">13</span></span><strong>استكشاف مصادر البيانات</strong><span class="value">100%</span>
+                </div><div>
+                    <span class="status notapplicable"><span class="status-inner">0</span></span><strong>لايمكن تطبيقه</strong><span class="value">0%</span>
+                </div><br style="clear:both;">
             </div>
-          </div>
-          <div class="goal-stats">
-          
-          
-            <span class="complete" style="width:0.0%" title="اعلن على الانترنت: 0%"></span>
-          
-          
-            <span class="inprogress" style="width:0.0%" title="الاحصائيات دائرة: 0%"></span>
-          
-          
-            <span class="notstarted" style="width:100.0%" title="استكشاف مصادر البيانات: 100%"></span>
-          
-          
-            <span class="notapplicable" style="width:0.0%" title="لايمكن تطبيقه: 0%"></span></div>
-          <div class="divider">
-          </div>
         </div>
-      <br style="clear:both;">
-    </div><div class="goal reporting-status-item">
-        <div class="frame goal-tiles">
-          <a href="/sdg-lucy-site/ar/13">
-            <img src="https://open-sdg.org/sdg-translations/assets/img/goals/ar/13.png" alt="العمل المناخي - هدف 13" width="100" height="100" id="goal-13"/>
-          </a>
-        </div>
-        <div class="details">
-          <h3 class="status-goal">
+        <div class="goal-stats">
+                
+                
+                <span class="complete" style="width:0.0%" title="اعلن على الانترنت: 0%"></span>
+                
+                
+                <span class="inprogress" style="width:0.0%" title="الاحصائيات دائرة: 0%"></span>
+                
+                
+                <span class="notstarted" style="width:100.0%" title="استكشاف مصادر البيانات: 100%"></span>
+                
+                
+                <span class="notapplicable" style="width:0.0%" title="لايمكن تطبيقه: 0%"></span></div>
+        <div class="divider"></div>
+    </div>
+    <br style="clear:both;">
+</div><div class="goal reporting-status-item">
+    <div class="frame goal-tiles">
+        <a href="/sdg-lucy-site/ar/13">
+        <img src="https://open-sdg.org/sdg-translations/assets/img/goals/ar/13.png" alt="العمل المناخي - هدف 13" width="100" height="100" class="goal-icon-13"/>
+        </a>
+    </div>
+    <div class="details">
+        <h3 class="status-goal">
             <a href="/sdg-lucy-site/ar/13">العمل المناخي</a>
             <span class="total">8 مؤشرات</span>
-          </h3>
-          <div class="summary">
+        </h3>
+        <div class="summary">
             <div class="statuses"><div>
-                <span class="status complete">0</span><strong>اعلن على الانترنت</strong><span class="value">0%</span>
-              </div><div>
-                <span class="status inprogress">0</span><strong>الاحصائيات دائرة</strong><span class="value">0%</span>
-              </div><div>
-                <span class="status notstarted">8</span><strong>استكشاف مصادر البيانات</strong><span class="value">100%</span>
-              </div><div>
-                <span class="status notapplicable">0</span><strong>لايمكن تطبيقه</strong><span class="value">0%</span>
-              </div><br style="clear:both;">
+                    <span class="status complete"><span class="status-inner">0</span></span><strong>اعلن على الانترنت</strong><span class="value">0%</span>
+                </div><div>
+                    <span class="status inprogress"><span class="status-inner">0</span></span><strong>الاحصائيات دائرة</strong><span class="value">0%</span>
+                </div><div>
+                    <span class="status notstarted"><span class="status-inner">8</span></span><strong>استكشاف مصادر البيانات</strong><span class="value">100%</span>
+                </div><div>
+                    <span class="status notapplicable"><span class="status-inner">0</span></span><strong>لايمكن تطبيقه</strong><span class="value">0%</span>
+                </div><br style="clear:both;">
             </div>
-          </div>
-          <div class="goal-stats">
-          
-          
-            <span class="complete" style="width:0.0%" title="اعلن على الانترنت: 0%"></span>
-          
-          
-            <span class="inprogress" style="width:0.0%" title="الاحصائيات دائرة: 0%"></span>
-          
-          
-            <span class="notstarted" style="width:100.0%" title="استكشاف مصادر البيانات: 100%"></span>
-          
-          
-            <span class="notapplicable" style="width:0.0%" title="لايمكن تطبيقه: 0%"></span></div>
-          <div class="divider">
-          </div>
         </div>
-      <br style="clear:both;">
-    </div><div class="goal reporting-status-item">
-        <div class="frame goal-tiles">
-          <a href="/sdg-lucy-site/ar/14">
-            <img src="https://open-sdg.org/sdg-translations/assets/img/goals/ar/14.png" alt="الحياة تحت الماء - هدف 14" width="100" height="100" id="goal-14"/>
-          </a>
-        </div>
-        <div class="details">
-          <h3 class="status-goal">
+        <div class="goal-stats">
+                
+                
+                <span class="complete" style="width:0.0%" title="اعلن على الانترنت: 0%"></span>
+                
+                
+                <span class="inprogress" style="width:0.0%" title="الاحصائيات دائرة: 0%"></span>
+                
+                
+                <span class="notstarted" style="width:100.0%" title="استكشاف مصادر البيانات: 100%"></span>
+                
+                
+                <span class="notapplicable" style="width:0.0%" title="لايمكن تطبيقه: 0%"></span></div>
+        <div class="divider"></div>
+    </div>
+    <br style="clear:both;">
+</div><div class="goal reporting-status-item">
+    <div class="frame goal-tiles">
+        <a href="/sdg-lucy-site/ar/14">
+        <img src="https://open-sdg.org/sdg-translations/assets/img/goals/ar/14.png" alt="الحياة تحت الماء - هدف 14" width="100" height="100" class="goal-icon-14"/>
+        </a>
+    </div>
+    <div class="details">
+        <h3 class="status-goal">
             <a href="/sdg-lucy-site/ar/14">الحياة تحت الماء</a>
             <span class="total">10 مؤشرات</span>
-          </h3>
-          <div class="summary">
+        </h3>
+        <div class="summary">
             <div class="statuses"><div>
-                <span class="status complete">0</span><strong>اعلن على الانترنت</strong><span class="value">0%</span>
-              </div><div>
-                <span class="status inprogress">0</span><strong>الاحصائيات دائرة</strong><span class="value">0%</span>
-              </div><div>
-                <span class="status notstarted">10</span><strong>استكشاف مصادر البيانات</strong><span class="value">100%</span>
-              </div><div>
-                <span class="status notapplicable">0</span><strong>لايمكن تطبيقه</strong><span class="value">0%</span>
-              </div><br style="clear:both;">
+                    <span class="status complete"><span class="status-inner">0</span></span><strong>اعلن على الانترنت</strong><span class="value">0%</span>
+                </div><div>
+                    <span class="status inprogress"><span class="status-inner">0</span></span><strong>الاحصائيات دائرة</strong><span class="value">0%</span>
+                </div><div>
+                    <span class="status notstarted"><span class="status-inner">10</span></span><strong>استكشاف مصادر البيانات</strong><span class="value">100%</span>
+                </div><div>
+                    <span class="status notapplicable"><span class="status-inner">0</span></span><strong>لايمكن تطبيقه</strong><span class="value">0%</span>
+                </div><br style="clear:both;">
             </div>
-          </div>
-          <div class="goal-stats">
-          
-          
-            <span class="complete" style="width:0.0%" title="اعلن على الانترنت: 0%"></span>
-          
-          
-            <span class="inprogress" style="width:0.0%" title="الاحصائيات دائرة: 0%"></span>
-          
-          
-            <span class="notstarted" style="width:100.0%" title="استكشاف مصادر البيانات: 100%"></span>
-          
-          
-            <span class="notapplicable" style="width:0.0%" title="لايمكن تطبيقه: 0%"></span></div>
-          <div class="divider">
-          </div>
         </div>
-      <br style="clear:both;">
-    </div><div class="goal reporting-status-item">
-        <div class="frame goal-tiles">
-          <a href="/sdg-lucy-site/ar/15">
-            <img src="https://open-sdg.org/sdg-translations/assets/img/goals/ar/15.png" alt="الحياة على الأرض - هدف 15" width="100" height="100" id="goal-15"/>
-          </a>
-        </div>
-        <div class="details">
-          <h3 class="status-goal">
+        <div class="goal-stats">
+                
+                
+                <span class="complete" style="width:0.0%" title="اعلن على الانترنت: 0%"></span>
+                
+                
+                <span class="inprogress" style="width:0.0%" title="الاحصائيات دائرة: 0%"></span>
+                
+                
+                <span class="notstarted" style="width:100.0%" title="استكشاف مصادر البيانات: 100%"></span>
+                
+                
+                <span class="notapplicable" style="width:0.0%" title="لايمكن تطبيقه: 0%"></span></div>
+        <div class="divider"></div>
+    </div>
+    <br style="clear:both;">
+</div><div class="goal reporting-status-item">
+    <div class="frame goal-tiles">
+        <a href="/sdg-lucy-site/ar/15">
+        <img src="https://open-sdg.org/sdg-translations/assets/img/goals/ar/15.png" alt="الحياة على الأرض - هدف 15" width="100" height="100" class="goal-icon-15"/>
+        </a>
+    </div>
+    <div class="details">
+        <h3 class="status-goal">
             <a href="/sdg-lucy-site/ar/15">الحياة على الأرض</a>
             <span class="total">14 مؤشرات</span>
-          </h3>
-          <div class="summary">
+        </h3>
+        <div class="summary">
             <div class="statuses"><div>
-                <span class="status complete">0</span><strong>اعلن على الانترنت</strong><span class="value">0%</span>
-              </div><div>
-                <span class="status inprogress">0</span><strong>الاحصائيات دائرة</strong><span class="value">0%</span>
-              </div><div>
-                <span class="status notstarted">14</span><strong>استكشاف مصادر البيانات</strong><span class="value">100%</span>
-              </div><div>
-                <span class="status notapplicable">0</span><strong>لايمكن تطبيقه</strong><span class="value">0%</span>
-              </div><br style="clear:both;">
+                    <span class="status complete"><span class="status-inner">0</span></span><strong>اعلن على الانترنت</strong><span class="value">0%</span>
+                </div><div>
+                    <span class="status inprogress"><span class="status-inner">0</span></span><strong>الاحصائيات دائرة</strong><span class="value">0%</span>
+                </div><div>
+                    <span class="status notstarted"><span class="status-inner">14</span></span><strong>استكشاف مصادر البيانات</strong><span class="value">100%</span>
+                </div><div>
+                    <span class="status notapplicable"><span class="status-inner">0</span></span><strong>لايمكن تطبيقه</strong><span class="value">0%</span>
+                </div><br style="clear:both;">
             </div>
-          </div>
-          <div class="goal-stats">
-          
-          
-            <span class="complete" style="width:0.0%" title="اعلن على الانترنت: 0%"></span>
-          
-          
-            <span class="inprogress" style="width:0.0%" title="الاحصائيات دائرة: 0%"></span>
-          
-          
-            <span class="notstarted" style="width:100.0%" title="استكشاف مصادر البيانات: 100%"></span>
-          
-          
-            <span class="notapplicable" style="width:0.0%" title="لايمكن تطبيقه: 0%"></span></div>
-          <div class="divider">
-          </div>
         </div>
-      <br style="clear:both;">
-    </div><div class="goal reporting-status-item">
-        <div class="frame goal-tiles">
-          <a href="/sdg-lucy-site/ar/16">
-            <img src="https://open-sdg.org/sdg-translations/assets/img/goals/ar/16.png" alt="السلام والعدالة - مؤسسات قوية - هدف 16" width="100" height="100" id="goal-16"/>
-          </a>
-        </div>
-        <div class="details">
-          <h3 class="status-goal">
+        <div class="goal-stats">
+                
+                
+                <span class="complete" style="width:0.0%" title="اعلن على الانترنت: 0%"></span>
+                
+                
+                <span class="inprogress" style="width:0.0%" title="الاحصائيات دائرة: 0%"></span>
+                
+                
+                <span class="notstarted" style="width:100.0%" title="استكشاف مصادر البيانات: 100%"></span>
+                
+                
+                <span class="notapplicable" style="width:0.0%" title="لايمكن تطبيقه: 0%"></span></div>
+        <div class="divider"></div>
+    </div>
+    <br style="clear:both;">
+</div><div class="goal reporting-status-item">
+    <div class="frame goal-tiles">
+        <a href="/sdg-lucy-site/ar/16">
+        <img src="https://open-sdg.org/sdg-translations/assets/img/goals/ar/16.png" alt="السلام والعدالة - مؤسسات قوية - هدف 16" width="100" height="100" class="goal-icon-16"/>
+        </a>
+    </div>
+    <div class="details">
+        <h3 class="status-goal">
             <a href="/sdg-lucy-site/ar/16">السلام والعدالة - مؤسسات قوية</a>
             <span class="total">23 مؤشرات</span>
-          </h3>
-          <div class="summary">
+        </h3>
+        <div class="summary">
             <div class="statuses"><div>
-                <span class="status complete">0</span><strong>اعلن على الانترنت</strong><span class="value">0%</span>
-              </div><div>
-                <span class="status inprogress">0</span><strong>الاحصائيات دائرة</strong><span class="value">0%</span>
-              </div><div>
-                <span class="status notstarted">23</span><strong>استكشاف مصادر البيانات</strong><span class="value">100%</span>
-              </div><div>
-                <span class="status notapplicable">0</span><strong>لايمكن تطبيقه</strong><span class="value">0%</span>
-              </div><br style="clear:both;">
+                    <span class="status complete"><span class="status-inner">0</span></span><strong>اعلن على الانترنت</strong><span class="value">0%</span>
+                </div><div>
+                    <span class="status inprogress"><span class="status-inner">0</span></span><strong>الاحصائيات دائرة</strong><span class="value">0%</span>
+                </div><div>
+                    <span class="status notstarted"><span class="status-inner">23</span></span><strong>استكشاف مصادر البيانات</strong><span class="value">100%</span>
+                </div><div>
+                    <span class="status notapplicable"><span class="status-inner">0</span></span><strong>لايمكن تطبيقه</strong><span class="value">0%</span>
+                </div><br style="clear:both;">
             </div>
-          </div>
-          <div class="goal-stats">
-          
-          
-            <span class="complete" style="width:0.0%" title="اعلن على الانترنت: 0%"></span>
-          
-          
-            <span class="inprogress" style="width:0.0%" title="الاحصائيات دائرة: 0%"></span>
-          
-          
-            <span class="notstarted" style="width:100.0%" title="استكشاف مصادر البيانات: 100%"></span>
-          
-          
-            <span class="notapplicable" style="width:0.0%" title="لايمكن تطبيقه: 0%"></span></div>
-          <div class="divider">
-          </div>
         </div>
-      <br style="clear:both;">
-    </div><div class="goal reporting-status-item">
-        <div class="frame goal-tiles">
-          <a href="/sdg-lucy-site/ar/17">
-            <img src="https://open-sdg.org/sdg-translations/assets/img/goals/ar/17.png" alt="الشراكات من أجل الأهداف - هدف 17" width="100" height="100" id="goal-17"/>
-          </a>
-        </div>
-        <div class="details">
-          <h3 class="status-goal">
+        <div class="goal-stats">
+                
+                
+                <span class="complete" style="width:0.0%" title="اعلن على الانترنت: 0%"></span>
+                
+                
+                <span class="inprogress" style="width:0.0%" title="الاحصائيات دائرة: 0%"></span>
+                
+                
+                <span class="notstarted" style="width:100.0%" title="استكشاف مصادر البيانات: 100%"></span>
+                
+                
+                <span class="notapplicable" style="width:0.0%" title="لايمكن تطبيقه: 0%"></span></div>
+        <div class="divider"></div>
+    </div>
+    <br style="clear:both;">
+</div><div class="goal reporting-status-item">
+    <div class="frame goal-tiles">
+        <a href="/sdg-lucy-site/ar/17">
+        <img src="https://open-sdg.org/sdg-translations/assets/img/goals/ar/17.png" alt="الشراكات من أجل الأهداف - هدف 17" width="100" height="100" class="goal-icon-17"/>
+        </a>
+    </div>
+    <div class="details">
+        <h3 class="status-goal">
             <a href="/sdg-lucy-site/ar/17">الشراكات من أجل الأهداف</a>
             <span class="total">25 مؤشرات</span>
-          </h3>
-          <div class="summary">
+        </h3>
+        <div class="summary">
             <div class="statuses"><div>
-                <span class="status complete">0</span><strong>اعلن على الانترنت</strong><span class="value">0%</span>
-              </div><div>
-                <span class="status inprogress">0</span><strong>الاحصائيات دائرة</strong><span class="value">0%</span>
-              </div><div>
-                <span class="status notstarted">25</span><strong>استكشاف مصادر البيانات</strong><span class="value">100%</span>
-              </div><div>
-                <span class="status notapplicable">0</span><strong>لايمكن تطبيقه</strong><span class="value">0%</span>
-              </div><br style="clear:both;">
+                    <span class="status complete"><span class="status-inner">0</span></span><strong>اعلن على الانترنت</strong><span class="value">0%</span>
+                </div><div>
+                    <span class="status inprogress"><span class="status-inner">0</span></span><strong>الاحصائيات دائرة</strong><span class="value">0%</span>
+                </div><div>
+                    <span class="status notstarted"><span class="status-inner">25</span></span><strong>استكشاف مصادر البيانات</strong><span class="value">100%</span>
+                </div><div>
+                    <span class="status notapplicable"><span class="status-inner">0</span></span><strong>لايمكن تطبيقه</strong><span class="value">0%</span>
+                </div><br style="clear:both;">
             </div>
-          </div>
-          <div class="goal-stats">
-          
-          
-            <span class="complete" style="width:0.0%" title="اعلن على الانترنت: 0%"></span>
-          
-          
-            <span class="inprogress" style="width:0.0%" title="الاحصائيات دائرة: 0%"></span>
-          
-          
-            <span class="notstarted" style="width:100.0%" title="استكشاف مصادر البيانات: 100%"></span>
-          
-          
-            <span class="notapplicable" style="width:0.0%" title="لايمكن تطبيقه: 0%"></span></div>
-          <div class="divider">
-          </div>
         </div>
-      <br style="clear:both;">
+        <div class="goal-stats">
+                
+                
+                <span class="complete" style="width:0.0%" title="اعلن على الانترنت: 0%"></span>
+                
+                
+                <span class="inprogress" style="width:0.0%" title="الاحصائيات دائرة: 0%"></span>
+                
+                
+                <span class="notstarted" style="width:100.0%" title="استكشاف مصادر البيانات: 100%"></span>
+                
+                
+                <span class="notapplicable" style="width:0.0%" title="لايمكن تطبيقه: 0%"></span></div>
+        <div class="divider"></div>
     </div>
+    <br style="clear:both;">
+</div>
+  
+
+  
+
+  
+
+  
 
   <!---->
 
@@ -1096,7 +1091,7 @@ var translations = {
 <script>translations['search'] = translations['search'] || {};
     translations['search']['search'] = 'بحث';</script>
 
-<script src='/sdg-lucy-site/assets/js/sdg.js?v=20201201010316'></script>
+<script src='/sdg-lucy-site/assets/js/sdg.js?v=20201202010234'></script>
 
 <script>
 $(function() {
